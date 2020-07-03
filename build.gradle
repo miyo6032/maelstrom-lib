@@ -1,17 +1,34 @@
-/*
-To publish a dependent mod: #1 publish this mod to mavenLocal. Then, go to the dependent mod settings.gradle and remove the includeBuild
-composite dependency. Then add mavenLocal() to the repositories in the dependent mod build.gradle and add include statement to dependencies
-if needed. This should allow you to publish the mod with this mod wrapped inside as a library.
-
-For debugging and hot reloading, the library doesn't seem to initially build with
-the dependent project. It seems like it will take a little bit of extra time for
-that class to become associated with hot reload. It's not a huge lag, and still allows
-for the full feature set as far as I can tell. We should be able to run tests as well from
-the dependent project.
-
-If the junit test cases come up with "no tests found", we solved it by clearing the gradle
-cache user\.gradle\caches\modules-2\files-2.1
-*/
+/**
+ * Building. Most of my mods use this library as a dependency for building as a composite build. Gradle does not make this
+ * easy unfortunately. Here are the general steps.
+ *
+ * You want the dependent mod repo and this library mod repo side by side.
+ *
+ * Next, we want to run "gradlew build publishToMavenLocal" to push a temporary artifact that we'll use later.
+ *
+ * Next, in the dependent mod settings.gradle file, comment the "includeBuild" line and refresh the gradle. It should
+ * use the mavenLocal repo and pull down the artifact.
+ *
+ * The uncomment the "includeBuild" line, and the gradle should successfully build.
+ *
+ * Now here comes the jenky part. You can now run the game environment, but the classes associated with the library may
+ * not be linked in the debugger (e.g. you can't use breakpoint or hot reload code from the library). To fix this I have
+ * a few suggestions.
+ *
+ * First, if the project uses IDEA instead of gradle to run and compile (you can check under gradle settings), you may
+ * have to link the library project instead of uncommenting the "includeBuild" in the gradle file.
+ *
+ * If you use gradle as the default instead, I think it will work fine to have "includeBuild"
+ *
+ * Next, you have to go to project structure and make sure that the main module in the dependent mod has a the main
+ * module of the library included as a dependency. I think this is what makes IDEA know to use the source files.
+ *
+ * After this. hopefully you should be able to hot reload and use debugging as normal, but I'm not quite sure if there
+ * are any limitations.
+ *
+ * If the junit test cases come up with "no tests found", we solved it by clearing the gradle
+ * cache user\.gradle\caches\modules-2\files-2.1
+ */
 
 plugins {
     id 'fabric-loom'
@@ -90,8 +107,25 @@ jar {
     from "LICENSE"
 }
 
-publishing.repositories {
-    mavenLocal()
+// configure the maven publication
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            // add all the jars that should be included when publishing to maven
+            artifact(remapJar) {
+                builtBy remapJar
+            }
+            artifact(sourcesJar) {
+                builtBy remapSourcesJar
+            }
+        }
+    }
+
+    // select the repositories you want to publish to
+    repositories {
+        // uncomment to publish to the local maven
+//         mavenLocal()
+    }
 }
 
 compileKotlin.kotlinOptions.jvmTarget = "1.8"

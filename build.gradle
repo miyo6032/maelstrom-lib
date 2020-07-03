@@ -1,8 +1,17 @@
 /*
 To publish a dependent mod: #1 publish this mod to mavenLocal. Then, go to the dependent mod settings.gradle and remove the includeBuild
 composite dependency. Then add mavenLocal() to the repositories in the dependent mod build.gradle and add include statement to dependencies
-if needed. This should allow you to publish the mod with this mod as a library.
- */
+if needed. This should allow you to publish the mod with this mod wrapped inside as a library.
+
+For debugging and hot reloading, the library doesn't seem to initially build with
+the dependent project. It seems like it will take a little bit of extra time for
+that class to become associated with hot reload. It's not a huge lag, and still allows
+for the full feature set as far as I can tell. We should be able to run tests as well from
+the dependent project.
+
+If the junit test cases come up with "no tests found", we solved it by clearing the gradle
+cache user\.gradle\caches\modules-2\files-2.1
+*/
 
 plugins {
     id 'fabric-loom'
@@ -26,6 +35,7 @@ test {
 
 repositories {
     maven { url = "http://maven.fabricmc.net/" }
+    mavenCentral()
 }
 
 dependencies {
@@ -41,8 +51,11 @@ dependencies {
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
-    testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5:1.3.72'
-    testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
+    testImplementation(
+            'org.assertj:assertj-core:3.12.2',
+            'org.junit.jupiter:junit-jupiter-api:5.4.2'
+    )
+    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.4.2')
 }
 
 processResources {

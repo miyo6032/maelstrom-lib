@@ -13,7 +13,6 @@ import net.minecraft.util.Identifier
 Entity renderer that allows any entity to use that doesn't need any special rendering capabilities
  */
 @Environment(EnvType.CLIENT)
-class EntityRenderer<T: MobEntity, M: EntityModel<T>>(entityRenderDispatcher: EntityRenderDispatcher, entityModel: M, shadowSize: Float, private val textureLocation: String) : MobEntityRenderer<T, M>(entityRenderDispatcher, entityModel, shadowSize) {
-
-    override fun getTexture(entity: T): Identifier = Identifier(MaelstromMod.MODID, "textures/entity/$textureLocation")
+class EntityRenderer<T: MobEntity, M: EntityModel<T>>(entityRenderDispatcher: EntityRenderDispatcher, entityModel: M, shadowSize: Float, private val textureLocation: Identifier) : MobEntityRenderer<T, M>(entityRenderDispatcher, entityModel, shadowSize) {
+    override fun getTexture(entity: T): Identifier = textureLocation
 }

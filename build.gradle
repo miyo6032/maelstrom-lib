@@ -1,33 +1,12 @@
 /**
- * Building. Most of my mods use this library as a dependency for building as a composite build. Gradle does not make this
- * easy unfortunately. Here are the general steps.
+ * Building. Most of my mods use this library as a dependency for building as a composite build. However, modImplementation
+ * messes various things up, so in order to make a composite build. you have to instead use implementation in the dependent
+ * mod. In IDEA, it seems to work fine and debugs without issue. (Don't forget to set includeBuild in settings.gradle for
+ * the dependent mod)
  *
- * You want the dependent mod repo and this library mod repo side by side.
- *
- * Next, we want to run "gradlew build publishToMavenLocal" to push a temporary artifact that we'll use later.
- *
- * Next, in the dependent mod settings.gradle file, comment the "includeBuild" line and refresh the gradle. It should
- * use the mavenLocal repo and pull down the artifact.
- *
- * The uncomment the "includeBuild" line, and the gradle should successfully build.
- *
- * Now here comes the jenky part. You can now run the game environment, but the classes associated with the library may
- * not be linked in the debugger (e.g. you can't use breakpoint or hot reload code from the library). To fix this I have
- * a few suggestions.
- *
- * First, if the project uses IDEA instead of gradle to run and compile (you can check under gradle settings), you may
- * have to link the library project instead of uncommenting the "includeBuild" in the gradle file.
- *
- * If you use gradle as the default instead, I think it will work fine to have "includeBuild"
- *
- * Next, you have to go to project structure and make sure that the main module in the dependent mod has a the main
- * module of the library included as a dependency. I think this is what makes IDEA know to use the source files.
- *
- * After this. hopefully you should be able to hot reload and use debugging as normal, but I'm not quite sure if there
- * are any limitations.
- *
- * If the junit test cases come up with "no tests found", we solved it by clearing the gradle
- * cache user\.gradle\caches\modules-2\files-2.1
+ * For building the jar, you have to do some funky stuff. I think the easiest way to publish this library to mavenLocal,
+ * and then switch the dependent mod to use that local repo by commenting out the includeBuild line, and uncommending
+ * the mavenLocal repo. Then, switch the implementation to be modImplementation, and it seems to build fine.
  */
 
 plugins {

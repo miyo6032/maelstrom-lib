@@ -2,6 +2,8 @@ package net.barribob.maelstrom.mixin;
 
 import kotlin.Pair;
 import net.barribob.maelstrom.MaelstromMod;
+import net.barribob.maelstrom.mob.AIManager;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.GoalSelector;
 import net.minecraft.entity.mob.MobEntity;
@@ -15,24 +17,40 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MobEntity.class)
 public class AIManipulationMixin {
 
-    @Shadow @Final protected GoalSelector goalSelector;
+    @Shadow
+    @Final
+    protected GoalSelector goalSelector;
 
-    @Shadow @Final protected GoalSelector targetSelector;
+    @Shadow
+    @Final
+    protected GoalSelector targetSelector;
 
     @Inject(at = @At(value = "RETURN"), method = "<init>")
     private void goal(CallbackInfo info) {
         MobEntity entity = (MobEntity) (Object) this;
         if (entity.world != null && !entity.world.isClient) {
-            if (MaelstromMod.INSTANCE.getAiManager().getInjections().containsKey(entity.getType())) {
-                MaelstromMod.INSTANCE.getAiManager().getInjections().get(entity.getType()).forEach((generator) -> {
+            String mobId = EntityType.getId(entity.getType()).toString();
+            AIManager aiManager = MaelstromMod.INSTANCE.getAiManager();
+
+            if (aiManager.getInjections().containsKey(mobId)) {
+                aiManager.getInjections().get(mobId).forEach((generator) -> {
                     Pair<Integer, Goal> pair = generator.invoke(entity);
-                    this.goalSelector.add(pair.component1(), pair.component2());
+                    if (pair.component2() != null) {
+                        this.goalSelector.add(pair.component1(), pair.component2());
+                    } else {
+                        MaelstromMod.INSTANCE.getLOGGER().error("AI to be injected for " + mobId + " was null");
+                    }
                 });
             }
-            if (MaelstromMod.INSTANCE.getAiManager().getTargetInjections().containsKey(entity.getType())) {
-                MaelstromMod.INSTANCE.getAiManager().getTargetInjections().get(entity.getType()).forEach((generator) -> {
+
+            if (aiManager.getTargetInjections().containsKey(mobId)) {
+                aiManager.getTargetInjections().get(mobId).forEach((generator) -> {
                     Pair<Integer, Goal> pair = generator.invoke(entity);
-                    this.targetSelector.add(pair.component1(), pair.component2());
+                    if (pair.component2() != null) {
+                        this.targetSelector.add(pair.component1(), pair.component2());
+                    } else {
+                        MaelstromMod.INSTANCE.getLOGGER().error("Target AI to be injected for " + mobId + " was null");
+                    }
                 });
             }
         }

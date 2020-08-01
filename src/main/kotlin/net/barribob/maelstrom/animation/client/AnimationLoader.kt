@@ -19,7 +19,7 @@ class AnimationLoader {
         }
         val filename = s[0]
         val animName = s[1]
-        val loc = Identifier(MaelstromMod.MODID, "animations/$filename.json")
+        val loc = Identifier("maelstrom_invasions", "animations/$filename.json") // TODO: Loader only work for the maelstrom invasions mod
         val jsonParser = JsonParser()
         var resource: Resource? = null
         try {

@@ -1,17 +1,14 @@
 package net.barribob.maelstrom.mob.server.ai
 
-import net.barribob.maelstrom.adapters.IGoal
 import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.ai.goal.Goal
 import net.minecraft.entity.mob.MobEntityWithAi
 import net.minecraft.entity.player.PlayerEntity
 import java.util.*
 import kotlin.math.max
 import kotlin.math.pow
 
-/**
- * A more generalized version of the skeleton strafing bow attack ai.
- */
-class TimedAttackGoal(private val mob: MobEntityWithAi, private val maxAttackDistance: Float, val idealAttackDistance: Float, private val attackCooldown: Int, val attackFunction: () -> Int, val speed: Double = 1.0, val strafeAmount: Float = 0.5F, val lookSpeed: Float = 30F) : IGoal {
+class TimedAttackGoal(private val mob: MobEntityWithAi, private val maxAttackDistance: Float, val idealAttackDistance: Float, private val attackCooldown: Int, val attackFunction: () -> Int, val speed: Double = 1.0, val strafeAmount: Float = 0.5F, val lookSpeed: Float = 30F) : Goal() {
 
     private var attackTime = attackCooldown
     private var unseeTime = 0
@@ -29,8 +26,8 @@ class TimedAttackGoal(private val mob: MobEntityWithAi, private val maxAttackDis
         return target != null && target.isAlive
     }
 
-    override fun getControls(): EnumSet<IGoal.Control>? {
-       return EnumSet.of(IGoal.Control.MOVE, IGoal.Control.LOOK)
+    init {
+        controls = EnumSet.of(Control.MOVE, Control.LOOK)
     }
 
     override fun shouldContinue(): Boolean {

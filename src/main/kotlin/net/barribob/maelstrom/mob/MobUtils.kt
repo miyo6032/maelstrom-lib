@@ -1,23 +1,14 @@
 package net.barribob.maelstrom.mob
 
-import net.barribob.maelstrom.adapters.GoalConverter
-import net.barribob.maelstrom.adapters.IGoal
 import net.barribob.maelstrom.general.yOffset
 import net.barribob.maelstrom.mob.server.ai.BlockType
 import net.minecraft.block.*
 import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.ai.goal.FollowTargetGoal
-import net.minecraft.entity.ai.goal.RevengeGoal
-import net.minecraft.entity.ai.goal.SwimGoal
-import net.minecraft.entity.ai.goal.WanderAroundFarGoal
 import net.minecraft.entity.ai.pathing.NavigationType
 import net.minecraft.entity.boss.dragon.EnderDragonPart
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.entity.effect.StatusEffects
-import net.minecraft.entity.mob.MobEntity
-import net.minecraft.entity.mob.MobEntityWithAi
-import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.tag.BlockTags
 import net.minecraft.tag.FluidTags
 import net.minecraft.util.math.BlockPos
@@ -93,33 +84,33 @@ object MobUtils {
         return entity.world.getEntityById(entity.entityId) == null
     }
 
-    fun getSwimmingGoal(priority: Int, entity: MobEntity) : Pair<Int, IGoal> {
-        return Pair(priority, GoalConverter(SwimGoal(entity)))
-    }
-
-    fun getWanderingGoal(priority: Int, distance: Double, entity: MobEntityWithAi) : Pair<Int, IGoal> {
-        return Pair(priority, GoalConverter(WanderAroundFarGoal(entity, distance)))
-    }
-
-    fun getTargetSelectGoal(
-            priority: Int,
-            entity: MobEntityWithAi,
-            targetOnlyPlayers: Boolean = false,
-            checkVisibility: Boolean = true,
-            checkNavigation: Boolean = false,
-            chance: Int = 10, condition:
-            (LivingEntity) -> Boolean = { true }) : Pair<Int, IGoal> {
-        return if(targetOnlyPlayers) {
-            Pair(priority, GoalConverter(FollowTargetGoal(entity, PlayerEntity::class.java, chance, checkVisibility, checkNavigation) { condition(it) }))
-        }
-        else {
-            Pair(priority, GoalConverter(FollowTargetGoal(entity, LivingEntity::class.java, chance, checkVisibility, checkNavigation) { condition(it) }))
-        }
-    }
-
-    fun getRevengeGoal(priority: Int, entity: MobEntityWithAi) : Pair<Int, IGoal> {
-        return Pair(priority, GoalConverter(RevengeGoal(entity, *arrayOfNulls(0))))
-    }
+//    fun getSwimmingGoal(priority: Int, entity: MobEntity) : Pair<Int, IGoal> {
+//        return Pair(priority, GoalConverter(SwimGoal(entity)))
+//    }
+//
+//    fun getWanderingGoal(priority: Int, distance: Double, entity: MobEntityWithAi) : Pair<Int, IGoal> {
+//        return Pair(priority, GoalConverter(WanderAroundFarGoal(entity, distance)))
+//    }
+//
+//    fun getTargetSelectGoal(
+//            priority: Int,
+//            entity: MobEntityWithAi,
+//            targetOnlyPlayers: Boolean = false,
+//            checkVisibility: Boolean = true,
+//            checkNavigation: Boolean = false,
+//            chance: Int = 10, condition:
+//            (LivingEntity) -> Boolean = { true }) : Pair<Int, IGoal> {
+//        return if(targetOnlyPlayers) {
+//            Pair(priority, GoalConverter(FollowTargetGoal(entity, PlayerEntity::class.java, chance, checkVisibility, checkNavigation) { condition(it) }))
+//        }
+//        else {
+//            Pair(priority, GoalConverter(FollowTargetGoal(entity, LivingEntity::class.java, chance, checkVisibility, checkNavigation) { condition(it) }))
+//        }
+//    }
+//
+//    fun getRevengeGoal(priority: Int, entity: MobEntityWithAi) : Pair<Int, IGoal> {
+//        return Pair(priority, GoalConverter(RevengeGoal(entity, *arrayOfNulls(0))))
+//    }
 
     fun getBlockType(world: BlockView, pos: BlockPos, callsLeft: Int): BlockType {
         val blockState = world.getBlockState(pos)

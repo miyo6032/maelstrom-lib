@@ -1,9 +1,9 @@
 package net.barribob.maelstrom.mob.server.ai
 
 import net.barribob.maelstrom.MaelstromMod
-import net.barribob.maelstrom.adapters.IGoal
 import net.barribob.maelstrom.general.*
 import net.barribob.maelstrom.mob.MobUtils
+import net.minecraft.entity.ai.goal.Goal
 import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.entity.mob.MobEntity
 import net.minecraft.util.hit.HitResult
@@ -30,7 +30,7 @@ import kotlin.math.sqrt
  * Spider navigation makes so that spiders speed off into a straight direction
  * Jump calculations start to overestimate the distance with high velocities... mostly because minecraft has a strangely high air resistance effect going on
  */
-class JumpToTargetGoal(private val entity: MobEntity) : IGoal {
+class JumpToTargetGoal(private val entity: MobEntity) : Goal() {
     private val minTargetDistance = 1.5 // Minimum distance required for the jump ai to activate
     private val jumpClearanceAboveHead = 1.0 // Y offset above an entity's hitbox to raycast to see if there are any blocks in the way of the jump
     private val forwardMovementTicks = 40 // How many ticks the entity will "press the forward key" while jumping
@@ -46,8 +46,8 @@ class JumpToTargetGoal(private val entity: MobEntity) : IGoal {
 
     data class JumpData(val jumpVel: Pair<Double, Double>, val direction: Vec3d, val edgePos: Vec3d)
 
-    override fun getControls(): EnumSet<IGoal.Control>? {
-        return EnumSet.of(IGoal.Control.MOVE, IGoal.Control.JUMP)
+    init {
+        controls = EnumSet.of(Control.MOVE, Control.JUMP)
     }
 
     override fun canStart(): Boolean {

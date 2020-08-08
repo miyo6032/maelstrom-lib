@@ -54,7 +54,10 @@ class JumpToTargetGoal(private val entity: MobEntity) : Goal() {
         if (entity.navigation != null && entity.isOnGround && jumpData == null) {
             val path = entity.navigation.currentPath ?: return false
 
-            if(entity.navigation.isFollowingPath && path.reachesTarget() && path.nodes.map { getNode(it.pos) }.none { it == BlockType.PASSABLE_OBSTACLE || it == BlockType.SOLID_OBSTACLE }) {
+            val pathRange = path.currentNodeIndex until path.length
+            val hasNoObstacles = pathRange.map { getNode(path.getNode(it).pos) }.none { it == BlockType.PASSABLE_OBSTACLE || it == BlockType.SOLID_OBSTACLE }
+
+            if(entity.navigation.isFollowingPath && path.reachesTarget() && hasNoObstacles) {
                 return false
             }
 

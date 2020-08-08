@@ -5,6 +5,7 @@ import net.barribob.maelstrom.animation.server.ServerAnimationWatcher
 import net.barribob.maelstrom.config.ConfigManager
 import net.barribob.maelstrom.general.EventScheduler
 import net.barribob.maelstrom.mob.AIManager
+import net.barribob.maelstrom.util.HoconConfigManager
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
@@ -34,12 +35,17 @@ object MaelstromMod {
     @Environment(EnvType.SERVER)
     val configManager = ConfigManager()
 
+    @Environment(EnvType.SERVER)
+    val hoconConfigManager = HoconConfigManager()
+
     val LOGGER: Logger = LogManager.getLogger()
 }
 
 @Suppress("unused")
 fun init() {
     ServerTickEvents.START_SERVER_TICK.register(ServerTickEvents.StartTick { MaelstromMod.serverEventScheduler.updateEvents() })
+
+    MaelstromMod.LOGGER.info(MaelstromMod.hoconConfigManager.handleConfigLoad(MaelstromMod.MODID, "test").getString("test"))
 }
 
 @Environment(EnvType.CLIENT)

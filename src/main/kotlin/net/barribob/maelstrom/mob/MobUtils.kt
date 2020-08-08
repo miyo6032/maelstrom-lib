@@ -12,7 +12,8 @@ import net.minecraft.entity.ai.pathing.NavigationType
 import net.minecraft.entity.boss.dragon.EnderDragonPart
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.entity.effect.StatusEffects
-import net.minecraft.entity.mob.MobEntityWithAi
+import net.minecraft.entity.mob.MobEntity
+import net.minecraft.entity.mob.PathAwareEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.tag.BlockTags
 import net.minecraft.tag.FluidTags
@@ -46,7 +47,7 @@ object MobUtils {
     fun handleAreaImpact(radius: Double, maxDamage: Float, source: LivingEntity, pos: Vec3d, damageSource: DamageSource,
                          knockbackFactor: Double = 1.0, fireFactor: Int = 0, damageDecay: Boolean = true, effectCallback: (Entity, Double) -> Unit = { _, _ -> run {} }) {
 
-        val list: List<Entity> = source.world.getEntities(source, Box(BlockPos(pos)).expand(radius))
+        val list: List<Entity> = source.world.getOtherEntities(source, Box(BlockPos(pos)).expand(radius))
         val isInstance = { i: Entity -> i is LivingEntity || i is EnderDragonPart || i.collides() }
         val radiusSq = radius.pow(2.0)
 
@@ -90,7 +91,7 @@ object MobUtils {
     }
 
     fun getTargetSelectGoal(
-            entity: MobEntityWithAi,
+            entity: MobEntity,
             targetOnlyPlayers: Boolean = false,
             checkVisibility: Boolean = true,
             checkNavigation: Boolean = false,
@@ -104,7 +105,7 @@ object MobUtils {
         }
     }
 
-    fun getRevengeGoal(entity: MobEntityWithAi) : Goal {
+    fun getRevengeGoal(entity: PathAwareEntity) : Goal {
         return RevengeGoal(entity, *arrayOfNulls(0))
     }
 

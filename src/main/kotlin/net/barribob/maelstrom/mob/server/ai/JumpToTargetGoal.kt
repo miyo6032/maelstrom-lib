@@ -42,9 +42,10 @@ class JumpToTargetGoal(private val entity: MobEntity) : Goal() {
     private val gravity = 0.1
     private val yVelocityScale = 1.53
     private val jumpNoise = 0.1
+    private val maxTicksAttemptNavigation = 40
     private var jumpData: JumpData? = null
 
-    data class JumpData(val jumpVel: Pair<Double, Double>, val direction: Vec3d, val edgePos: Vec3d)
+    data class JumpData(val jumpVel: Pair<Double, Double>, val direction: Vec3d, val edgePos: Vec3d, var ticksAttempted: Int = 0)
 
     init {
         controls = EnumSet.of(Control.MOVE, Control.JUMP)
@@ -109,22 +110,39 @@ class JumpToTargetGoal(private val entity: MobEntity) : Goal() {
     override fun tick() {
         val jumpData = jumpData ?: return
 
+        jumpData.ticksAttempted += 1
+
+        if(jumpData.ticksAttempted > maxTicksAttemptNavigation) {
+            entity.navigation.stop()
+            this.jumpData = null
+            return
+        }
+
         if(BlockPos(this.entity.pos) != BlockPos(jumpData.edgePos)) {
             entity.moveControl.moveTo(jumpData.edgePos.x, jumpData.edgePos.y, jumpData.edgePos.z, moveSpeed)
             return
         }
 
-        MobUtils.leapTowards(entity, entity.pos.add(jumpData.direction), jumpData.jumpVel.first + jumpData.jumpVel.first * RandomUtils.double(jumpNoise), if(jumpData.jumpVel.second > 0) 0.0 else 0.1)
-        if(jumpData.jumpVel.second > 0) {
+        jump(jumpData)
+    }
+
+    private fun jump(jumpData: JumpData) {
+        MobUtils.leapTowards(
+            entity,
+            entity.pos.add(jumpData.direction),
+            jumpData.jumpVel.first + jumpData.jumpVel.first * RandomUtils.double(jumpNoise),
+            if (jumpData.jumpVel.second > 0) 0.0 else 0.1
+        )
+        if (jumpData.jumpVel.second > 0) {
             entity.jumpControl.setActive()
         }
         for (i in 0..forwardMovementTicks) {
             MaelstromMod.serverEventScheduler.addEvent(
-                    { !entity.isAlive || entity.isOnGround },
-                    {
-                        val movePos = entity.pos.add(jumpData.direction.multiply(3.0))
-                        entity.moveControl.moveTo(movePos.x, movePos.y, movePos.z, jumpForwardSpeed)
-                    }, i)
+                { !entity.isAlive || entity.isOnGround },
+                {
+                    val movePos = entity.pos.add(jumpData.direction.multiply(3.0))
+                    entity.moveControl.moveTo(movePos.x, movePos.y, movePos.z, jumpForwardSpeed)
+                }, i)
         }
         entity.navigation.stop()
         this.jumpData = null

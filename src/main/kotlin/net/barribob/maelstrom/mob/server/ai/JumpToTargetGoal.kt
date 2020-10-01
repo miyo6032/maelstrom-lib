@@ -9,7 +9,7 @@ import net.minecraft.entity.mob.MobEntity
 import net.minecraft.util.hit.HitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
-import net.minecraft.world.RayTraceContext
+import net.minecraft.world.RaycastContext
 import java.util.*
 import kotlin.math.floor
 import kotlin.math.pow
@@ -227,7 +227,7 @@ class JumpToTargetGoal(private val entity: MobEntity) : Goal() {
         val requiredHeight = entity.height + jumpClearanceAboveHead
         val start = actorPos.yOffset(requiredHeight)
         val end = start.add(jumpDirection.multiply(jumpLength))
-        val result = entity.world.rayTrace(RayTraceContext(start, end, RayTraceContext.ShapeType.COLLIDER, RayTraceContext.FluidHandling.NONE, entity))
+        val result = entity.world.raycast(RaycastContext(start, end, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, entity))
         return result.type == HitResult.Type.MISS
     }
 

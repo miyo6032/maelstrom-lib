@@ -1,8 +1,5 @@
 package net.barribob.maelstrom.general
 
-import java.util.*
-
-
 /**
  * Manages cancelable scheduled events to run in the future.
  *
@@ -11,32 +8,18 @@ import java.util.*
  */
 class EventScheduler {
     private var ticks = 0
-    private val eventQueue = PriorityQueue<TimedEvent>()
-    private val eventsToAdd = mutableSetOf<TimedEvent>()
+    private val eventQueue = mutableListOf<IEvent>()
+    private val eventsToAdd = mutableSetOf<IEvent>()
 
     fun updateEvents() {
-        for (event in eventsToAdd) {
-            if(!event.shouldCancel()) {
-                eventQueue.add(TimedEvent(event.shouldCancel, event.callback, event.ticks + this.ticks))
-            }
-        }
-
+        eventQueue.addAll(eventsToAdd)
         eventsToAdd.clear()
-
-        val itr = eventQueue.iterator()
-
-        while (itr.hasNext()) {
-            val event = itr.next()
-
-            if(event.shouldCancel()) {
-                itr.remove()
-            } else if (event.ticks <= this.ticks) {
-                itr.remove()
-                event.callback()
-            } else {
-                break
+        for (iEvent in eventQueue) {
+            if(ticks % iEvent.tickSize() == 0 && iEvent.shouldDoEvent()) {
+                iEvent.doEvent()
             }
         }
+        eventQueue.removeAll { it.shouldRemoveEvent() }
 
         this.ticks++
     }
@@ -44,12 +27,7 @@ class EventScheduler {
     /**
      * Adds a scheduled event that may be canceled up until the time it runs
      */
-    fun addEvent(shouldCancel: () -> Boolean, callback: () -> Unit, ticksFromNow: Int) {
-        eventsToAdd.add(TimedEvent(shouldCancel, callback, ticksFromNow))
-    }
-
-    private class TimedEvent(val shouldCancel: () -> Boolean, val callback: () -> Unit, val ticks: Int) : Comparable<TimedEvent> {
-        override fun compareTo(other: TimedEvent): Int = this.ticks - other.ticks
+    fun addTimedEvent(shouldCancel: () -> Boolean, callback: () -> Unit, ticksFromNow: Int, duration: Int = 0) {
+        eventsToAdd.add(TimedEvent(shouldCancel, callback, ticks + ticksFromNow, duration) { ticks })
     }
 }
-

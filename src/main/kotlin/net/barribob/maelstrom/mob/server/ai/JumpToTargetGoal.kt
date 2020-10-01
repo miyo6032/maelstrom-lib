@@ -137,7 +137,7 @@ class JumpToTargetGoal(private val entity: MobEntity) : Goal() {
             entity.jumpControl.setActive()
         }
         for (i in 0..forwardMovementTicks) {
-            MaelstromMod.serverEventScheduler.addEvent(
+            MaelstromMod.serverEventScheduler.addTimedEvent(
                 { !entity.isAlive || entity.isOnGround },
                 {
                     val movePos = entity.pos.add(jumpData.direction.multiply(3.0))

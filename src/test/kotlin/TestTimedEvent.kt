@@ -1,16 +1,17 @@
 import net.barribob.maelstrom.general.EventScheduler
+import net.barribob.maelstrom.general.TimedEvent
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class TestEventScheduler {
+class TestTimedEvent {
 
     @Test
-    fun testEventAddedAndFired() {
+    fun eventAddedAndFired() {
         val eventManager = EventScheduler()
         var eventsFired = 0
         val incrementer = { eventsFired += 1 }
 
-        eventManager.addTimedEvent({ false }, incrementer, 1)
+        eventManager.addEvent(TimedEvent(incrementer, 1))
         eventManager.updateEvents()
         assertEquals(0, eventsFired)
         eventManager.updateEvents()
@@ -18,18 +19,18 @@ class TestEventScheduler {
     }
 
     @Test
-    fun testMultipleEventsFired() {
+    fun multipleEventsFired() {
         val eventManager = EventScheduler()
         var eventsFired = 0
         val incrementer = { eventsFired += 1 }
 
-        eventManager.addTimedEvent({ false }, incrementer, 1)
+        eventManager.addEvent(TimedEvent(incrementer, 1))
         eventManager.updateEvents()
-        eventManager.addTimedEvent({ false }, incrementer, 3)
+        eventManager.addEvent(TimedEvent(incrementer, 3))
         eventManager.updateEvents()
         assertEquals(1, eventsFired)
 
-        eventManager.addTimedEvent({ false }, incrementer, 1)
+        eventManager.addEvent(TimedEvent(incrementer, 1))
         eventManager.updateEvents()
         assertEquals(1, eventsFired)
         eventManager.updateEvents()
@@ -39,14 +40,14 @@ class TestEventScheduler {
     }
 
     @Test
-    fun testOrderOfEventsFired() {
+    fun orderOfEventsFired() {
         val eventManager = EventScheduler()
         var eventStr = ""
 
-        eventManager.addTimedEvent({ false }, { eventStr += "Fourth!" }, 3)
-        eventManager.addTimedEvent({ false }, { eventStr += "Third!" }, 2)
-        eventManager.addTimedEvent({ false }, { eventStr += "First!" }, 1)
-        eventManager.addTimedEvent({ false }, { eventStr += "Second!" }, 1)
+        eventManager.addEvent(TimedEvent({ eventStr += "Fourth!" }, 3))
+        eventManager.addEvent(TimedEvent({ eventStr += "Third!" }, 2))
+        eventManager.addEvent(TimedEvent({ eventStr += "First!" }, 1))
+        eventManager.addEvent(TimedEvent({ eventStr += "Second!" }, 1))
 
         eventManager.updateEvents()
         eventManager.updateEvents()
@@ -58,23 +59,23 @@ class TestEventScheduler {
     }
 
     @Test
-    fun testEventCancel() {
+    fun eventCancel() {
         val eventManager = EventScheduler()
         var eventStr = ""
 
-        eventManager.addTimedEvent({ true }, { eventStr += "Should not be assigned!" }, 1)
+        eventManager.addEvent(TimedEvent({ eventStr += "Should not be assigned!" }, 1, shouldCancel = { true }))
         eventManager.updateEvents()
         eventManager.updateEvents()
         assertEquals("", eventStr)
     }
 
     @Test
-    fun testDuration() {
+    fun duration() {
         val eventManager = EventScheduler()
         var eventsFired = 0
         val incrementer = { eventsFired += 1 }
 
-        eventManager.addTimedEvent({ false }, incrementer, 1, 2)
+        eventManager.addEvent(TimedEvent(incrementer, 1, 3))
         for(i in 0..5) {
             eventManager.updateEvents()
         }

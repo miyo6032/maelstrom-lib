@@ -24,10 +24,7 @@ class EventScheduler {
         this.ticks++
     }
 
-    /**
-     * Adds a scheduled event that may be canceled up until the time it runs
-     */
-    fun addTimedEvent(shouldCancel: () -> Boolean, callback: () -> Unit, ticksFromNow: Int, duration: Int = 0) {
-        eventsToAdd.add(TimedEvent(shouldCancel, callback, ticks + ticksFromNow, duration) { ticks })
+    fun addEvent(event: IEvent) {
+        eventsToAdd.add(event)
     }
 }

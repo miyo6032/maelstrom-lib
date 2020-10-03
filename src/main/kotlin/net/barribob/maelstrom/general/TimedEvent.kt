@@ -1,17 +1,18 @@
 package net.barribob.maelstrom.general
 
 class TimedEvent(
-        val shouldCancel: () -> Boolean,
         val callback: () -> Unit,
-        val ticks: Int,
-        val duration: Int,
-        val getCurrentTicks: () -> Int) : IEvent {
+        val delay: Int,
+        val duration: Int = 1,
+        val shouldCancel: () -> Boolean = { false }) : IEvent {
 
-    override fun shouldDoEvent(): Boolean = this.ticks <= getCurrentTicks()
+    var age = 0
+
+    override fun shouldDoEvent(): Boolean = age++ >= delay
 
     override fun doEvent() = callback()
 
-    override fun shouldRemoveEvent(): Boolean = shouldCancel() || this.ticks + duration <= getCurrentTicks()
+    override fun shouldRemoveEvent(): Boolean = shouldCancel() || age >= delay + duration
 
     override fun tickSize(): Int = 1
 }

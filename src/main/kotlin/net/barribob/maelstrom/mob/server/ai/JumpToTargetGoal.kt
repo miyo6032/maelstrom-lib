@@ -136,14 +136,12 @@ class JumpToTargetGoal(private val entity: MobEntity) : Goal() {
         if (jumpData.jumpVel.second > 0) {
             entity.jumpControl.setActive()
         }
-        for (i in 0..forwardMovementTicks) {
-            MaelstromMod.serverEventScheduler.addTimedEvent(
-                { !entity.isAlive || entity.isOnGround },
-                {
-                    val movePos = entity.pos.add(jumpData.direction.multiply(3.0))
-                    entity.moveControl.moveTo(movePos.x, movePos.y, movePos.z, jumpForwardSpeed)
-                }, i)
+        val callback = {
+            val movePos = entity.pos.add(jumpData.direction.multiply(3.0))
+            entity.moveControl.moveTo(movePos.x, movePos.y, movePos.z, jumpForwardSpeed)
         }
+        val shouldCancel = { !entity.isAlive || entity.isOnGround }
+        MaelstromMod.serverEventScheduler.addEvent(TimedEvent(callback, 0, forwardMovementTicks, shouldCancel))
         entity.navigation.stop()
         this.jumpData = null
     }

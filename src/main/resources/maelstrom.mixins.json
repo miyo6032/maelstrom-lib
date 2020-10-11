@@ -6,7 +6,6 @@
     "AIManipulationMixin"
   ],
   "client": [
-    "AnimationMixins"
   ],
   "injectors": {
     "defaultRequire": 1

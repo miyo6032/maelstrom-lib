@@ -1,11 +1,9 @@
 package net.barribob.maelstrom
 
-import net.barribob.maelstrom.animation.client.ClientAnimationWatcher
-import net.barribob.maelstrom.animation.server.ServerAnimationWatcher
-import net.barribob.maelstrom.config.ConfigManager
-import net.barribob.maelstrom.general.ClientServerUtils
-import net.barribob.maelstrom.general.EventScheduler
+import net.barribob.maelstrom.general.ConfigManager
+import net.barribob.maelstrom.general.event.EventScheduler
 import net.barribob.maelstrom.mob.AIManager
+import net.barribob.maelstrom.static_utilities.ClientServerUtils
 import net.barribob.maelstrom.util.HoconConfigManager
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
@@ -24,12 +22,6 @@ object MaelstromMod {
 
     @Environment(EnvType.SERVER)
     val aiManager = AIManager()
-
-    @Environment(EnvType.CLIENT)
-    val clientAnimationWatcher = ClientAnimationWatcher()
-
-    @Environment(EnvType.SERVER)
-    val serverAnimationWatcher = ServerAnimationWatcher()
 
     @Environment(EnvType.SERVER)
     val configManager = ConfigManager()

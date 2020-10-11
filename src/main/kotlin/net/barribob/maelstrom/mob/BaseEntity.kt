@@ -1,6 +1,6 @@
 package net.barribob.maelstrom.mob
 
-import net.barribob.maelstrom.animation.client.GeckolibAnimationManager
+import net.barribob.maelstrom.mob.animation.GeckolibAnimationManager
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.mob.PathAwareEntity
 import net.minecraft.world.World

@@ -6,6 +6,7 @@
     "AIManipulationMixin"
   ],
   "client": [
+    "RenderMixin"
   ],
   "injectors": {
     "defaultRequire": 1

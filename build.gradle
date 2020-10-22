@@ -22,9 +22,6 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
-minecraft {
-}
-
 test {
     useJUnitPlatform()
 }
@@ -94,19 +91,15 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             // add all the jars that should be included when publishing to maven
-            artifact(remapJar) {
-                builtBy remapJar
-            }
-            artifact(sourcesJar) {
-                builtBy remapSourcesJar
-            }
+            artifact jar
+            artifact remapJar
+            artifact sourcesJar
+            artifactId = project.archivesBaseName
         }
     }
 
-    // select the repositories you want to publish to
     repositories {
-        // uncomment to publish to the local maven
-//         mavenLocal()
+         mavenLocal()
     }
 }
 

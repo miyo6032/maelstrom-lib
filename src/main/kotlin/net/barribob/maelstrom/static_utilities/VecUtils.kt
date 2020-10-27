@@ -1,9 +1,10 @@
-package net.barribob.maelstrom.general
+package net.barribob.maelstrom.static_utilities
 
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.random.Random
 
 fun Vec3d.yOffset(i: Double): Vec3d = this.add(0.0, i, 0.0)
 
@@ -44,5 +45,9 @@ object VecUtils {
             callback(pos, i)
             pos = pos.add(dir)
         }
+    }
+
+    fun randVec(rand: () -> Double = { Random.nextDouble() - 0.5 }): Vec3d {
+        return Vec3d(rand(), rand(), rand())
     }
 }

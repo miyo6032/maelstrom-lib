@@ -1,7 +1,6 @@
-package net.barribob.maelstrom.registry
+package net.barribob.maelstrom.static_utilities
 
-import net.barribob.maelstrom.MaelstromMod
-import net.barribob.maelstrom.render.EntityRenderer
+import net.barribob.maelstrom.mob.render.EntityRenderer
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry

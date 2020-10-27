@@ -1,24 +1,24 @@
 package net.barribob.maelstrom
 
-import net.barribob.maelstrom.animation.client.ClientAnimationWatcher
-import net.barribob.maelstrom.animation.server.ServerAnimationWatcher
-import net.barribob.maelstrom.config.ConfigManager
-import net.barribob.maelstrom.general.EventScheduler
+import net.barribob.maelstrom.general.ConfigManager
+import net.barribob.maelstrom.general.event.EventScheduler
 import net.barribob.maelstrom.mob.AIManager
+import net.barribob.maelstrom.render.RenderMap
+import net.barribob.maelstrom.static_utilities.ClientServerUtils
 import net.barribob.maelstrom.util.HoconConfigManager
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
-import net.minecraft.client.MinecraftClient
 import net.minecraft.util.Identifier
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
 object MaelstromMod {
+    // Todo: refactor this to separate server from client
     const val MODID = "maelstrom"
-    val START_ANIMATION_PACKET_ID = Identifier(MODID, "start_animation")
+    val DRAW_POINTS_PACKET_ID = Identifier(MODID, "draw_points")
 
     @Environment(EnvType.SERVER)
     val serverEventScheduler = EventScheduler()
@@ -26,17 +26,17 @@ object MaelstromMod {
     @Environment(EnvType.SERVER)
     val aiManager = AIManager()
 
-    @Environment(EnvType.CLIENT)
-    val clientAnimationWatcher = ClientAnimationWatcher()
-
-    @Environment(EnvType.SERVER)
-    val serverAnimationWatcher = ServerAnimationWatcher()
-
     @Environment(EnvType.SERVER)
     val configManager = ConfigManager()
 
     @Environment(EnvType.SERVER)
     val hoconConfigManager = HoconConfigManager()
+
+    @Environment(EnvType.CLIENT)
+    val renderMap = RenderMap()
+
+    @Environment(EnvType.CLIENT)
+    val clientEventScheduler = EventScheduler()
 
     val LOGGER: Logger = LogManager.getLogger()
 }
@@ -44,6 +44,7 @@ object MaelstromMod {
 @Suppress("unused")
 fun init() {
     ServerTickEvents.START_SERVER_TICK.register(ServerTickEvents.StartTick { MaelstromMod.serverEventScheduler.updateEvents() })
+    ClientTickEvents.START_CLIENT_TICK.register(ClientTickEvents.StartTick { MaelstromMod.clientEventScheduler.updateEvents() })
 
     MaelstromMod.LOGGER.info(MaelstromMod.hoconConfigManager.handleConfigLoad(MaelstromMod.MODID, "test").getString("test"))
 }
@@ -51,18 +52,6 @@ fun init() {
 @Environment(EnvType.CLIENT)
 @Suppress("unused")
 fun clientInit() {
-    ClientSidePacketRegistry.INSTANCE.register(MaelstromMod.START_ANIMATION_PACKET_ID) { packetContext, packetData ->
-
-        val entityId = packetData.readInt()
-        val animId = packetData.readString()
-
-        packetContext.taskQueue.execute {
-        val entity = MinecraftClient.getInstance().world?.getEntityById(entityId)
-
-        if (entity != null) {
-            MaelstromMod.clientAnimationWatcher.startAnimation(entity, animId)
-        }
-    }}
-
-    ClientTickEvents.START_CLIENT_TICK.register( ClientTickEvents.StartTick { MaelstromMod.clientAnimationWatcher.tick() } )
+    ClientSidePacketRegistry.INSTANCE.register(MaelstromMod.DRAW_POINTS_PACKET_ID) { packetContext, packetData ->
+        ClientServerUtils.drawDebugPointsClient(packetContext, packetData) }
 }

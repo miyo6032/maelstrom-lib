@@ -1,4 +1,4 @@
-package net.barribob.maelstrom.general
+package net.barribob.maelstrom.static_utilities
 
 import kotlin.random.Random
 

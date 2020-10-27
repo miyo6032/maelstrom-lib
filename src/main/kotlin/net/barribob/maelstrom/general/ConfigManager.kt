@@ -1,4 +1,4 @@
-package net.barribob.maelstrom.config
+package net.barribob.maelstrom.general
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

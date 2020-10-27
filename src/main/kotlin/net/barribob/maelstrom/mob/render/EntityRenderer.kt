@@ -1,6 +1,5 @@
-package net.barribob.maelstrom.render
+package net.barribob.maelstrom.mob.render
 
-import net.barribob.maelstrom.MaelstromMod
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.client.render.entity.EntityRenderDispatcher

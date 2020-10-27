@@ -1,5 +1,7 @@
-import net.barribob.maelstrom.general.newVec3d
-import net.barribob.maelstrom.general.planeProject
+package static_utilities
+
+import net.barribob.maelstrom.static_utilities.newVec3d
+import net.barribob.maelstrom.static_utilities.planeProject
 import net.minecraft.util.math.Vec3d
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

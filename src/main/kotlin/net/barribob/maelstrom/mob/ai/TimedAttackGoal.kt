@@ -1,4 +1,4 @@
-package net.barribob.maelstrom.mob.server.ai
+package net.barribob.maelstrom.mob.ai
 
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.ai.goal.Goal

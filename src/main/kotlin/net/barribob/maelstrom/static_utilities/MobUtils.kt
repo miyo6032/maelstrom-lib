@@ -1,7 +1,6 @@
-package net.barribob.maelstrom.mob
+package net.barribob.maelstrom.static_utilities
 
-import net.barribob.maelstrom.general.yOffset
-import net.barribob.maelstrom.mob.server.ai.BlockType
+import net.barribob.maelstrom.mob.ai.BlockType
 import net.minecraft.block.*
 import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity

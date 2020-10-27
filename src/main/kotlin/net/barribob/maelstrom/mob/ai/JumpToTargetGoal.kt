@@ -1,8 +1,8 @@
-package net.barribob.maelstrom.mob.server.ai
+package net.barribob.maelstrom.mob.ai
 
 import net.barribob.maelstrom.MaelstromMod
-import net.barribob.maelstrom.general.*
-import net.barribob.maelstrom.mob.MobUtils
+import net.barribob.maelstrom.general.event.TimedEvent
+import net.barribob.maelstrom.static_utilities.*
 import net.minecraft.entity.ai.goal.Goal
 import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.entity.mob.MobEntity
@@ -136,14 +136,12 @@ class JumpToTargetGoal(private val entity: MobEntity) : Goal() {
         if (jumpData.jumpVel.second > 0) {
             entity.jumpControl.setActive()
         }
-        for (i in 0..forwardMovementTicks) {
-            MaelstromMod.serverEventScheduler.addEvent(
-                { !entity.isAlive || entity.isOnGround },
-                {
-                    val movePos = entity.pos.add(jumpData.direction.multiply(3.0))
-                    entity.moveControl.moveTo(movePos.x, movePos.y, movePos.z, jumpForwardSpeed)
-                }, i)
+        val callback = {
+            val movePos = entity.pos.add(jumpData.direction.multiply(3.0))
+            entity.moveControl.moveTo(movePos.x, movePos.y, movePos.z, jumpForwardSpeed)
         }
+        val shouldCancel = { !entity.isAlive || entity.isOnGround }
+        MaelstromMod.serverEventScheduler.addEvent(TimedEvent(callback, 0, forwardMovementTicks, shouldCancel))
         entity.navigation.stop()
         this.jumpData = null
     }

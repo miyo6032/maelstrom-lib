@@ -32,7 +32,6 @@ test {
 repositories {
     maven { url = "http://maven.fabricmc.net/" }
     mavenCentral()
-    maven { url 'https://repo.repsy.io/mvn/gandiber/geckolib' }
 }
 
 dependencies {
@@ -56,9 +55,6 @@ dependencies {
 
     api "com.typesafe:config:${project.config_version}"
     include "com.typesafe:config:${project.config_version}"
-
-    modImplementation "software.bernie.geckolib:fabric-1.16.2-geckolib:${geckolib_version}"
-    include "software.bernie.geckolib:fabric-1.16.2-geckolib:${geckolib_version}"
 }
 
 processResources {

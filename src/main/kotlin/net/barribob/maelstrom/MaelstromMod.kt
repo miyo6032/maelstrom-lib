@@ -18,7 +18,6 @@ import org.apache.logging.log4j.Logger
 object MaelstromMod {
     // Todo: refactor this to separate server from client
     const val MODID = "maelstrom"
-    val START_ANIMATION_PACKET_ID = Identifier(MODID, "start_animation")
     val DRAW_POINTS_PACKET_ID = Identifier(MODID, "draw_points")
 
     @Environment(EnvType.SERVER)
@@ -53,13 +52,6 @@ fun init() {
 @Environment(EnvType.CLIENT)
 @Suppress("unused")
 fun clientInit() {
-    ClientSidePacketRegistry.INSTANCE.register(MaelstromMod.START_ANIMATION_PACKET_ID) { packetContext, packetData ->
-        ClientServerUtils.startAnimationClient(
-            packetContext,
-            packetData
-        )
-    }
-
     ClientSidePacketRegistry.INSTANCE.register(MaelstromMod.DRAW_POINTS_PACKET_ID) { packetContext, packetData ->
         ClientServerUtils.drawDebugPointsClient(packetContext, packetData) }
 }

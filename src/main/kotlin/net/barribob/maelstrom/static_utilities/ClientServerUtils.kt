@@ -14,7 +14,7 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 
 object ClientServerUtils {
-    fun drawDebugPoints(points: List<Vec3d>, color: List<Float>, time: Int, watchPoint: Vec3d, world: World) {
+    fun drawDebugPoints(points: List<Vec3d>, time: Int, watchPoint: Vec3d, world: World, color: List<Float> = listOf(1f, 1f, 1f, 1f)) {
         val packetData = packDrawDebugPoints(time, color, points)
 
         PlayerStream.around(world, watchPoint, 100.0).forEach {

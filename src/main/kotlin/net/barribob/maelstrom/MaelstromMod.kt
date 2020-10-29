@@ -1,6 +1,7 @@
 package net.barribob.maelstrom
 
 import net.barribob.maelstrom.general.ConfigManager
+import net.barribob.maelstrom.general.command.TestCommand
 import net.barribob.maelstrom.general.event.EventScheduler
 import net.barribob.maelstrom.mob.AIManager
 import net.barribob.maelstrom.render.RenderMap
@@ -9,6 +10,7 @@ import net.barribob.maelstrom.util.HoconConfigManager
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
 import net.minecraft.util.Identifier
@@ -47,6 +49,8 @@ fun init() {
     ClientTickEvents.START_CLIENT_TICK.register(ClientTickEvents.StartTick { MaelstromMod.clientEventScheduler.updateEvents() })
 
     MaelstromMod.LOGGER.info(MaelstromMod.hoconConfigManager.handleConfigLoad(MaelstromMod.MODID, "test").getString("test"))
+
+    CommandRegistrationCallback.EVENT.register(TestCommand())
 }
 
 @Environment(EnvType.CLIENT)

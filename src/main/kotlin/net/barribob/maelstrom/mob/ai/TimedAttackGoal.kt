@@ -8,6 +8,7 @@ import java.util.*
 import kotlin.math.max
 import kotlin.math.pow
 
+@Deprecated("Inflexible and contains bugs")
 class TimedAttackGoal(private val mob: PathAwareEntity, private val maxAttackDistance: Float, val idealAttackDistance: Float, private val attackCooldown: Int, val attackFunction: () -> Int, val speed: Double = 1.0, val strafeAmount: Float = 0.5F, val lookSpeed: Float = 30F) : Goal() {
 
     private var attackTime = attackCooldown

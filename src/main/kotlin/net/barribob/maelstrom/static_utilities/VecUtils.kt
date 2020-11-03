@@ -17,6 +17,7 @@ fun BlockPos.asVec3d(): Vec3d = Vec3d(this.x.toDouble(), this.y.toDouble(), this
 /**
  * Rotate a normalized vector around an axis by given degrees https://stackoverflow.com/questions/31225062/rotating-a-vector-by-angle-and-axis-in-java
  */
+// TODO: Command test
 fun Vec3d.rotateVector(axis: Vec3d, degrees: Double): Vec3d {
     val theta = Math.toRadians(degrees)
     val x: Double = this.x
@@ -47,6 +48,7 @@ object VecUtils {
         }
     }
 
+    // TODO: Command test
     fun randVec(rand: () -> Double = { Random.nextDouble() - 0.5 }): Vec3d {
         return Vec3d(rand(), rand(), rand())
     }

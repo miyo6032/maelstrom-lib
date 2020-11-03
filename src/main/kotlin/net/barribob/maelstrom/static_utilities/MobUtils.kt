@@ -28,6 +28,7 @@ import kotlin.math.pow
  * Static utility functions that use or depend [Entity]
  */
 object MobUtils {
+    @Deprecated("Inflexible and untested")
     fun leapTowards(entity: LivingEntity, target: Vec3d, horzVel: Double, yVel: Double) {
         val dir = target.subtract(entity.pos).normalize()
         val leap: Vec3d = Vec3d(dir.x, 0.0, dir.z).normalize().multiply(horzVel).yOffset(yVel)
@@ -43,6 +44,7 @@ object MobUtils {
         entity.velocity = horzVelocity.yOffset(clampedYVelocity)
     }
 
+    @Deprecated("Inflexible function that needs to be refactored and tested")
     fun handleAreaImpact(radius: Double, maxDamage: Float, source: LivingEntity, pos: Vec3d, damageSource: DamageSource,
                          knockbackFactor: Double = 1.0, fireFactor: Int = 0, damageDecay: Boolean = true, effectCallback: (Entity, Double) -> Unit = { _, _ -> run {} }) {
 
@@ -85,10 +87,12 @@ object MobUtils {
         }
     }
 
+    @Deprecated("Untested")
     fun isEntityInWorld(entity: Entity): Boolean {
         return entity.world.getEntityById(entity.entityId) == null
     }
 
+    @Deprecated("Left over from goal adapter")
     fun getTargetSelectGoal(
             entity: MobEntity,
             targetOnlyPlayers: Boolean = false,
@@ -104,6 +108,7 @@ object MobUtils {
         }
     }
 
+    @Deprecated("Left over from goal adapter")
     fun getRevengeGoal(entity: PathAwareEntity) : Goal {
         return RevengeGoal(entity, *arrayOfNulls(0))
     }
@@ -140,7 +145,7 @@ object MobUtils {
         }
     }
 
-
+    @Deprecated("Untested and specific to jumping ai")
     fun getJumpVelocity(world: World, entity: LivingEntity): Double {
         var baseVelocity = 0.42 * getJumpVelocityMultiplier(world, entity)
         if (entity.hasStatusEffect(StatusEffects.JUMP_BOOST)) {
@@ -149,12 +154,14 @@ object MobUtils {
         return baseVelocity
     }
 
+    @Deprecated("Untested and specific to jumping ai")
     private fun getJumpVelocityMultiplier(world: World, entity: LivingEntity): Double {
         val f: Float = world.getBlockState(entity.blockPos).block.jumpVelocityMultiplier
         val g: Float = world.getBlockState(getVelocityAffectingPos(entity)).block.jumpVelocityMultiplier
         return if (f.toDouble() == 1.0) g.toDouble() else f.toDouble()
     }
 
+    @Deprecated("Untested and specific to jumping ai")
     private fun getVelocityAffectingPos(entity: LivingEntity): BlockPos? {
         return BlockPos(entity.pos.x, entity.boundingBox.minY - 0.5000001, entity.pos.z)
     }

@@ -1,9 +1,11 @@
 package net.barribob.maelstrom.util;
 
+import org.jetbrains.annotations.Nullable;
+
 // CREDIT: https://stackoverflow.com/questions/198431/how-do-you-compare-two-version-strings-in-java
 public class Version implements Comparable<Version> {
 
-    private String version;
+    private final String version;
 
     public final String get() {
         return this.version;
@@ -18,7 +20,7 @@ public class Version implements Comparable<Version> {
     }
 
     @Override
-    public int compareTo(Version that) {
+    public int compareTo(@Nullable Version that) {
         if (that == null)
             return 1;
         String[] thisParts = this.get().split("\\.");

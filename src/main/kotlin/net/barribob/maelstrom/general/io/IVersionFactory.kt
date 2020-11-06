@@ -1,6 +1,6 @@
 package net.barribob.maelstrom.general.io
 
-interface IVersionFactory {
-    fun loadFromSrc(baseResourceName: String): IVersion
-    fun loadFromRun(pathName: String): IVersion
+interface IVersionFactory <T : IVersion> {
+    fun loadFromSrc(baseResourceName: String): T
+    fun loadFromRun(pathName: String): T
 }

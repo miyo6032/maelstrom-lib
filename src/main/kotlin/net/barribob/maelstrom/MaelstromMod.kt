@@ -1,6 +1,7 @@
 package net.barribob.maelstrom
 
 import net.barribob.maelstrom.general.ConfigManager
+import net.barribob.maelstrom.general.command.ReloadConfigCommand
 import net.barribob.maelstrom.general.command.TestCommand
 import net.barribob.maelstrom.general.event.EventScheduler
 import net.barribob.maelstrom.general.io.*
@@ -32,14 +33,20 @@ object MaelstromMod {
 
     val LOGGER: ILogger = ConsoleLogger(LogManager.getLogger())
 
-    @Environment(EnvType.SERVER)
-    val hoconConfigManager = VersionedConfigLoader(LOGGER, ConfigVersionFactory(), ModFileManager(LOGGER))
-
     @Environment(EnvType.CLIENT)
     val renderMap = RenderMap()
 
     @Environment(EnvType.CLIENT)
     val clientEventScheduler = EventScheduler()
+
+    @Environment(EnvType.SERVER)
+    val configRegistry = ConfigRegistry(
+        VersionedConfigLoader(
+            LOGGER, ConfigVersionFactory(), ModFileManager(
+                LOGGER
+            )
+        )
+    )
 }
 
 @Suppress("unused")
@@ -48,11 +55,13 @@ fun init() {
     ClientTickEvents.START_CLIENT_TICK.register(ClientTickEvents.StartTick { MaelstromMod.clientEventScheduler.updateEvents() })
 
     CommandRegistrationCallback.EVENT.register(TestCommand())
+    CommandRegistrationCallback.EVENT.register(ReloadConfigCommand())
 }
 
 @Environment(EnvType.CLIENT)
 @Suppress("unused")
 fun clientInit() {
     ClientSidePacketRegistry.INSTANCE.register(MaelstromMod.DRAW_POINTS_PACKET_ID) { packetContext, packetData ->
-        ClientServerUtils.drawDebugPointsClient(packetContext, packetData) }
+        ClientServerUtils.drawDebugPointsClient(packetContext, packetData)
+    }
 }

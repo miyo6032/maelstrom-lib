@@ -2,15 +2,15 @@ package net.barribob.maelstrom.general.io
 
 import net.barribob.maelstrom.util.Version
 
-class VersionedConfigLoader(
+class VersionedConfigLoader <T : IVersion> (
     private val logger: ILogger,
-    private val versionFactory: IVersionFactory,
+    private val versionFactory: IVersionFactory<T>,
     private val fileManager: IFileManager
-) {
+) : IVersionedConfigLoader<T> {
 
-    fun handleConfigLoad(modId: String, configName: String): IVersion {
+    override fun handleConfigLoad(modId: String, configName: String): T {
         val configDirectoryPath = "./config/$modId/"
-        val defaultConfigPath = "default_configs/${configName}_default.conf"
+        val defaultConfigPath = "./assets/$modId/default_configs/${configName}_default.conf"
         val defaultConfig = versionFactory.loadFromSrc(defaultConfigPath)
 
         if (!fileManager.exists(configDirectoryPath)) {

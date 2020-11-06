@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import testing_utilities.MockLogger
+import testing_utilities.StubVersion
 
 class TestVersionedConfigLoader {
     private val modId = "modid"
@@ -80,7 +81,7 @@ class TestVersionedConfigLoader {
     }
 
     private fun runConfigLoad(runVersion: String, defaultVersion: String, exists: Boolean): TestData {
-        val defaultFilePath = "default_configs/${config}_default.conf"
+        val defaultFilePath = "./assets/$modId/default_configs/${config}_default.conf"
         val runFilePath = "./config/$modId/${config}.conf"
         val backupFilePath = "./config/$modId/${config}_${runVersion}.conf"
 
@@ -107,11 +108,7 @@ class TestVersionedConfigLoader {
         val logger: MockLogger
     )
 
-    class StubVersion(private val ver: String) : IVersion {
-        override fun getVersion(): String = ver
-    }
-
-    class StubVersionFactory(private val default: IVersion, private val runConfig: IVersion) : IVersionFactory {
+    class StubVersionFactory(private val default: IVersion, private val runConfig: IVersion) : IVersionFactory<IVersion> {
         override fun loadFromSrc(baseResourceName: String): IVersion = default
         override fun loadFromRun(pathName: String): IVersion = runConfig
     }

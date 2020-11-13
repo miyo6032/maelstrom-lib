@@ -1,8 +1,7 @@
 package net.barribob.maelstrom.general.io
 
-import com.typesafe.config.Config
+import net.barribob.maelstrom.general.io.config.IConfig
 
-
-class VersionedConfig(val config: Config) : IVersion {
+class VersionedConfig(val config: IConfig) : IVersion {
     override fun getVersion(): String = if (config.hasPath("config_version")) config.getString("config_version") else ""
 }

@@ -1,13 +1,13 @@
 package general.io
 
-import com.typesafe.config.Config
-import com.typesafe.config.ConfigFactory
 import net.barribob.maelstrom.general.io.ConfigRegistry
 import net.barribob.maelstrom.general.io.IVersionedConfigLoader
 import net.barribob.maelstrom.general.io.VersionedConfig
+import net.barribob.maelstrom.general.io.config.IConfig
 import net.minecraft.util.Identifier
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import testing_utilities.TestConfigFactory.createConfig
 
 class TestConfigRegistry {
     private val identifier = Identifier("modid", "config")
@@ -38,8 +38,7 @@ class TestConfigRegistry {
         assertEquals(updatedConfig, result)
     }
 
-    private fun createConfig(configText: String) = ConfigFactory.parseString(configText)
-    private fun createVersionedConfig(config: Config) = VersionedConfig(config)
+    private fun createVersionedConfig(config: IConfig) = VersionedConfig(config)
 
     private fun createConfigRegistry(versionLoader: IVersionedConfigLoader<VersionedConfig>): ConfigRegistry {
         return ConfigRegistry(versionLoader)

@@ -8,8 +8,20 @@ object RandomUtils {
     /**
      * Creates a random value between -range and range
      */
-    // TODO: Test
     fun double(range: Double): Double {
         return (rand.nextDouble() - 0.5) * 2 * range
+    }
+
+    /**
+     * Chooses a random integer between the min (inclusive) and the max (exclusive)
+     *
+     * @param min
+     * @param max
+     * @return
+     */
+    fun range(min: Int, max: Int): Int {
+        require(min <= max) { "Minimum is greater than maximum" }
+        val range = max - min
+        return min + rand.nextInt(range)
     }
 }

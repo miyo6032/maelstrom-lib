@@ -1,5 +1,6 @@
 package net.barribob.maelstrom.static_utilities
 
+import net.minecraft.util.math.Vec3d
 import kotlin.random.Random
 
 object RandomUtils {
@@ -23,5 +24,10 @@ object RandomUtils {
         require(min <= max) { "Minimum is greater than maximum" }
         val range = max - min
         return min + rand.nextInt(range)
+    }
+
+    // TODO: Command test
+    fun randVec(rand: () -> Double = { Random.nextDouble() - 0.5 }): Vec3d {
+        return Vec3d(rand(), rand(), rand())
     }
 }

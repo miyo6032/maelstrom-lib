@@ -90,7 +90,7 @@ class JumpToTargetGoal(private val entity: MobEntity) : Goal() {
                 continue
             }
 
-            VecUtils.lineCallback(entity.pos, endPos, detectionPoints) { pos, _ -> gaps.add(Pair(pos, getNode(BlockPos(pos)))) }
+            MathUtils.lineCallback(entity.pos, endPos, detectionPoints) { pos, _ -> gaps.add(Pair(pos, getNode(BlockPos(pos)))) }
 
             val pairs = gaps.zipWithNext().firstOrNull { it.first.second == BlockType.WALKABLE && it.second.second == BlockType.PASSABLE_OBSTACLE }
             val hasGapsInARow = gaps.zipWithNext().firstOrNull { it.first.second == BlockType.WALKABLE && it.second.second == BlockType.WALKABLE }

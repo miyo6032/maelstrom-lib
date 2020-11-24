@@ -24,6 +24,10 @@ import net.minecraft.world.World
 import kotlin.math.min
 import kotlin.math.pow
 
+fun Entity.addVelocity(vec: Vec3d) {
+    this.addVelocity(vec.x, vec.y, vec.z)
+}
+
 /**
  * Static utility functions that use or depend [Entity]
  */
@@ -45,8 +49,17 @@ object MobUtils {
     }
 
     @Deprecated("Inflexible function that needs to be refactored and tested")
-    fun handleAreaImpact(radius: Double, maxDamage: Float, source: LivingEntity, pos: Vec3d, damageSource: DamageSource,
-                         knockbackFactor: Double = 1.0, fireFactor: Int = 0, damageDecay: Boolean = true, effectCallback: (Entity, Double) -> Unit = { _, _ -> run {} }) {
+    fun handleAreaImpact(
+        radius: Double,
+        maxDamage: Float,
+        source: LivingEntity,
+        pos: Vec3d,
+        damageSource: DamageSource,
+        knockbackFactor: Double = 1.0,
+        fireFactor: Int = 0,
+        damageDecay: Boolean = true,
+        effectCallback: (Entity, Double) -> Unit = { _, _ -> run {} }
+    ) {
 
         val list: List<Entity> = source.world.getOtherEntities(source, Box(BlockPos(pos)).expand(radius))
         val isInstance = { i: Entity -> i is LivingEntity || i is EnderDragonPart || i.collides() }
@@ -76,11 +89,16 @@ object MobUtils {
             if (damage > 0 && adjustedDistanceSq < radiusSq) {
                 entity.setOnFireFor((fireFactor * damageFactorSq).toInt())
                 entity.damage(damageSource, damage.toFloat())
-                val entitySizeFactor: Double = if (avgEntitySize == 0.0) 1.0 else (1.0 / avgEntitySize).coerceIn(0.5, 1.0)
+                val entitySizeFactor: Double = if (avgEntitySize == 0.0) 1.0 else (1.0 / avgEntitySize).coerceIn(
+                    0.5,
+                    1.0
+                )
                 val entitySizeFactorSq = entitySizeFactor.pow(2.0)
 
                 // Velocity depends on the entity's size and the damage dealt squared
-                val velocity: Vec3d = entity.boundingBox.center.subtract(pos).normalize().multiply(damageFactorSq).multiply(knockbackFactor).multiply(entitySizeFactorSq)
+                val velocity: Vec3d = entity.boundingBox.center.subtract(pos).normalize().multiply(damageFactorSq).multiply(
+                    knockbackFactor
+                ).multiply(entitySizeFactorSq)
                 entity.addVelocity(velocity.x, velocity.y, velocity.z)
                 effectCallback(entity, damageFactorSq)
             }
@@ -94,12 +112,13 @@ object MobUtils {
 
     @Deprecated("Left over from goal adapter")
     fun getTargetSelectGoal(
-            entity: MobEntity,
-            targetOnlyPlayers: Boolean = false,
-            checkVisibility: Boolean = true,
-            checkNavigation: Boolean = false,
-            chance: Int = 10, condition:
-            (LivingEntity) -> Boolean = { true }) : Goal{
+        entity: MobEntity,
+        targetOnlyPlayers: Boolean = false,
+        checkVisibility: Boolean = true,
+        checkNavigation: Boolean = false,
+        chance: Int = 10, condition:
+            (LivingEntity) -> Boolean = { true }
+    ) : Goal{
         return if(targetOnlyPlayers) {
             FollowTargetGoal(entity, PlayerEntity::class.java, chance, checkVisibility, checkNavigation) { condition(it) }
         }

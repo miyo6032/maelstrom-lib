@@ -139,4 +139,39 @@ class TestMathUtils {
     fun testNegateServer() {
         assertVecEquals(VecUtils.unit.negateServer(), Vec3d(-1.0, -1.0, -1.0))
     }
+
+    @Test
+    fun directionToPitchYaw_Forward_IsZeroPitch() {
+        val pitch = MathUtils.directionToPitch(VecUtils.xAxis)
+
+        Assertions.assertEquals(0.0f, pitch, 0.00001f)
+    }
+
+    @Test
+    fun directionToPitchYaw_Up_IsNegativePitch() {
+        val pitch = MathUtils.directionToPitch(VecUtils.yAxis)
+
+        Assertions.assertEquals(-90.0f, pitch, 0.00001f)
+    }
+
+    @Test
+    fun directionToPitchYaw_Down_IsPositivePitch() {
+        val pitch = MathUtils.directionToPitch(VecUtils.yAxis.negateServer())
+
+        Assertions.assertEquals(90.0f, pitch, 0.00001f)
+    }
+
+    @Test
+    fun directionToPitchYaw_NegativeNonAxis_HasCorrectPitch() {
+        val pitch = MathUtils.directionToPitch(Vec3d(0.0, -1.0, 1.0))
+
+        Assertions.assertEquals(45.0f, pitch, 0.00001f)
+    }
+
+    @Test
+    fun testLerpVec() {
+        val result = MathUtils.lerpVec(0.1f, Vec3d.ZERO, VecUtils.yAxis)
+
+        assertVecEquals(Vec3d(0.0, 0.1, 0.0), result)
+    }
 }

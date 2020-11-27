@@ -1,6 +1,7 @@
 package net.barribob.maelstrom.static_utilities
 
 import net.minecraft.util.math.Box
+import net.minecraft.util.math.MathHelper
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.shape.VoxelShape
 import kotlin.math.ceil
@@ -92,5 +93,22 @@ object MathUtils {
         }
 
         return !collided
+    }
+
+    fun directionToPitch(direction: Vec3d): Float {
+        val x: Double = direction.x
+        val z: Double = direction.z
+        val y: Double = direction.y
+
+        val h = MathHelper.sqrt(x * x + z * z).toDouble()
+        return (Math.toDegrees(-(MathHelper.atan2(y, h)))).toFloat()
+    }
+
+    fun lerpVec(partialTicks: Float, vec1: Vec3d, vec2: Vec3d): Vec3d {
+        val pt = partialTicks.toDouble()
+        val x = MathHelper.lerp(pt, vec1.x, vec2.x)
+        val y = MathHelper.lerp(pt, vec1.y, vec2.y)
+        val z = MathHelper.lerp(pt, vec1.z, vec2.z)
+        return Vec3d(x, y, z)
     }
 }

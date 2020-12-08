@@ -50,18 +50,19 @@ object MaelstromMod {
             )
         )
     )
+
+    val testCommand = TestCommand()
 }
 
 @Suppress("unused")
 fun init() {
     ServerTickEvents.START_SERVER_TICK.register(ServerTickEvents.StartTick { MaelstromMod.serverEventScheduler.updateEvents() })
 
-    val testCommand = TestCommand()
-    CommandRegistrationCallback.EVENT.register(testCommand)
+    CommandRegistrationCallback.EVENT.register(MaelstromMod.testCommand)
     ArgumentTypes.register(
         "${MaelstromMod.MODID}:libtest",
         TestArgumentType::class.java,
-        ConstantArgumentSerializer { TestArgumentType(testCommand) })
+        ConstantArgumentSerializer { TestArgumentType(MaelstromMod.testCommand) })
 
     CommandRegistrationCallback.EVENT.register(ReloadConfigCommand())
 }

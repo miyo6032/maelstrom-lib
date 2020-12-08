@@ -6,6 +6,7 @@ import net.minecraft.util.hit.HitResult
 import net.minecraft.util.math.Box
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.RaycastContext
+import net.minecraft.world.explosion.Explosion
 
 object InGameTests {
     fun lineCallback(source: ServerCommandSource) {
@@ -49,6 +50,11 @@ object InGameTests {
 
         val color = if (!collided) listOf(1f, 1f, 1f, 1f) else listOf(1f, 0f, 0f, 1f)
         drawLine(pos, target, entity, color)
+    }
+
+    fun explode(source: ServerCommandSource) {
+        val e = source.entityOrThrow
+        source.world.createExplosion(e, e.x, e.y, e.z, 9f, Explosion.DestructionType.DESTROY)
     }
 
     private fun drawLine(

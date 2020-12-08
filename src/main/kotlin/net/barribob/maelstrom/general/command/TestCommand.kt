@@ -31,6 +31,7 @@ class TestCommand : CommandRegistrationCallback {
         addId(InGameTests::boxCorners.name, InGameTests::boxCorners)
         addId(InGameTests::willBoxFit.name, InGameTests::willBoxFit)
         addId(InGameTests::raycast.name, InGameTests::raycast)
+        addId(InGameTests::explode.name, InGameTests::explode)
     }
 
     private val suggestions: SuggestionProvider<ServerCommandSource> =
@@ -45,7 +46,7 @@ class TestCommand : CommandRegistrationCallback {
                 return@SuggestionProvider builder.buildFuture()
             })
 
-    private fun addId(
+    fun addId(
         name: String,
         callback: (ServerCommandSource) -> Unit
     ) = tests.put(Identifier(MaelstromMod.MODID, name.toLowerCase(Locale.ROOT)), callback)

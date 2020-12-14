@@ -28,6 +28,10 @@ fun Entity.addVelocity(vec: Vec3d) {
     this.addVelocity(vec.x, vec.y, vec.z)
 }
 
+fun Entity.setPos(vec: Vec3d) {
+    this.setPos(vec.x, vec.y, vec.z)
+}
+
 /**
  * Static utility functions that use or depend [Entity]
  */

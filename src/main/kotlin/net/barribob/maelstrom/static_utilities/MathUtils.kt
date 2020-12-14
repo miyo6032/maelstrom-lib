@@ -111,4 +111,11 @@ object MathUtils {
         val z = MathHelper.lerp(pt, vec1.z, vec2.z)
         return Vec3d(x, y, z)
     }
+
+    fun axisOffset(direction: Vec3d, offset: Vec3d): Vec3d {
+        val forward: Vec3d = direction.normalize()
+        val side: Vec3d = forward.crossProduct(VecUtils.yAxis).normalize()
+        val up: Vec3d = side.crossProduct(forward).normalize()
+        return forward.multiply(offset.x).add(side.multiply(offset.z)).add(up.multiply(offset.y))
+    }
 }

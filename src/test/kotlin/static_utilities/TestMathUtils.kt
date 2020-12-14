@@ -1,6 +1,7 @@
 package static_utilities
 
 import net.barribob.maelstrom.static_utilities.*
+import net.barribob.maelstrom.static_utilities.MathUtils.axisOffset
 import net.minecraft.util.math.Vec3d
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -173,5 +174,41 @@ class TestMathUtils {
         val result = MathUtils.lerpVec(0.1f, Vec3d.ZERO, VecUtils.yAxis)
 
         assertVecEquals(Vec3d(0.0, 0.1, 0.0), result)
+    }
+
+    @Test
+    fun testAxisOffsetX() {
+        val forward = Vec3d(0.0, 1.0, 1.0)
+        val offset = VecUtils.xAxis
+        val expected = forward.normalize()
+
+        assertVecEquals(expected, axisOffset(forward, offset))
+    }
+
+    @Test
+    fun testAxisOffsetY() {
+        val forward = Vec3d(0.0, 1.0, -1.0)
+        val offset = VecUtils.yAxis
+        val expected = Vec3d(0.0, 1.0, 1.0).normalize()
+
+        assertVecEquals(expected, axisOffset(forward, offset))
+    }
+
+    @Test
+    fun testAxisOffsetZ() {
+        val forward = Vec3d(0.0, 1.0, -1.0)
+        val offset = VecUtils.zAxis
+        val expected = Vec3d(1.0, 0.0, 0.0)
+
+        assertVecEquals(expected, axisOffset(forward, offset))
+    }
+
+    @Test
+    fun testAxisOffset_WhenDirectionAlongYAxis() {
+        val forward = VecUtils.yAxis
+        val offset = VecUtils.unit
+        val expected = Vec3d(.0, 1.0, .0)
+
+        assertVecEquals(expected, axisOffset(forward, offset))
     }
 }

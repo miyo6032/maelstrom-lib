@@ -29,7 +29,7 @@ fun Entity.addVelocity(vec: Vec3d) {
 }
 
 fun Entity.setPos(vec: Vec3d) {
-    this.setPos(vec.x, vec.y, vec.z)
+    this.updatePosition(vec.x, vec.y, vec.z)
 }
 
 /**

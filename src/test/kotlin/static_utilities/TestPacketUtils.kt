@@ -3,7 +3,6 @@ package static_utilities
 import io.netty.buffer.Unpooled
 import net.barribob.maelstrom.static_utilities.*
 import net.minecraft.network.PacketByteBuf
-import net.minecraft.util.math.Vec3d
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import testing_utilities.assertVecEquals

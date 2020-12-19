@@ -211,4 +211,28 @@ class TestMathUtils {
 
         assertVecEquals(expected, axisOffset(forward, offset))
     }
+
+    @Test
+    fun facingSameDirection_WhenFacingSimilarDirections() {
+        val direction1 = Vec3d(1.0, 2.0, 1.0)
+        val direction2 = Vec3d(1.0, 1.0, 2.0)
+
+        Assertions.assertTrue(MathUtils.facingSameDirection(direction1, direction2))
+    }
+
+    @Test
+    fun facingSameDirection_WhenOrthogonal() {
+        val direction1 = VecUtils.yAxis
+        val direction2 = VecUtils.zAxis
+
+        Assertions.assertFalse(MathUtils.facingSameDirection(direction1, direction2))
+    }
+
+    @Test
+    fun facingSameDirection_WhenFacingOpposingDirections() {
+        val direction1 = Vec3d(-1.0, -2.0, -1.0)
+        val direction2 = VecUtils.unit
+
+        Assertions.assertFalse(MathUtils.facingSameDirection(direction1, direction2))
+    }
 }

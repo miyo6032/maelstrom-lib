@@ -118,4 +118,8 @@ object MathUtils {
         val up: Vec3d = side.crossProduct(forward).normalize()
         return forward.multiply(offset.x).add(side.multiply(offset.z)).add(up.multiply(offset.y))
     }
+
+    fun facingSameDirection(direction1: Vec3d, direction2: Vec3d): Boolean {
+        return direction1.dotProduct(direction2) > 0
+    }
 }

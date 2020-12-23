@@ -1,12 +1,11 @@
 package net.barribob.maelstrom.static_utilities
 
+import net.barribob.maelstrom.general.math.ReferencedAxisRotator
 import net.minecraft.util.math.Box
 import net.minecraft.util.math.MathHelper
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.shape.VoxelShape
-import kotlin.math.ceil
-import kotlin.math.pow
-import kotlin.math.sqrt
+import kotlin.math.*
 
 fun Box.corners() = listOf(
     Vec3d(this.minX, this.maxY, this.minZ),
@@ -83,6 +82,20 @@ object MathUtils {
         }
     }
 
+    fun circleCallback(radius: Double, points: Int, axis: Vec3d, callback: (Vec3d) -> Unit) {
+        val degrees = Math.PI * 2 / points
+        val axisYaw = directionToYaw(axis)
+        val rotator = ReferencedAxisRotator(VecUtils.yAxis, axis)
+        for (i in 0 until points) {
+            val radians = i * degrees
+            val offset = Vec3d(sin(radians), 0.0, cos(radians))
+                .multiply(radius)
+                .rotateVector(VecUtils.yAxis, -axisYaw)
+            val rotated = rotator.rotate(offset)
+            callback(rotated)
+        }
+    }
+
     fun willBoxFit(box: Box, movement: Vec3d, collision: (Box) -> Boolean): Boolean {
         var collided = false
         val points = ceil(movement.length() / box.averageSideLength).toInt()
@@ -102,6 +115,13 @@ object MathUtils {
 
         val h = MathHelper.sqrt(x * x + z * z).toDouble()
         return (Math.toDegrees(-(MathHelper.atan2(y, h)))).toFloat()
+    }
+
+    fun directionToYaw(direction: Vec3d): Double {
+        val x: Double = direction.x
+        val z: Double = direction.z
+
+        return Math.toDegrees(MathHelper.atan2(z, x))
     }
 
     fun lerpVec(partialTicks: Float, vec1: Vec3d, vec2: Vec3d): Vec3d {

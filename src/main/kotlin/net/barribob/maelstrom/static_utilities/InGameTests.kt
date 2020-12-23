@@ -18,6 +18,15 @@ object InGameTests {
         ClientServerUtils.drawDebugPoints(linePoints, 1, pos, entity.world)
     }
 
+    fun circleCallback(source: ServerCommandSource) {
+        val entity = source.entityOrThrow
+        val direction = entity.rotationVector
+        val linePoints = mutableListOf<Vec3d>()
+        val pos = entity.getCameraPosVec(1f)
+        MathUtils.circleCallback(2.0, 7, direction) { linePoints.add(it.add(pos)) }
+        ClientServerUtils.drawDebugPoints(linePoints, 1, pos, entity.world)
+    }
+
     fun boxCorners(source: ServerCommandSource) {
         val entity = source.entityOrThrow
         val box = entity.boundingBox

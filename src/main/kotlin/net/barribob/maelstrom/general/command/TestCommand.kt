@@ -32,12 +32,13 @@ class TestCommand : CommandRegistrationCallback {
         addId(InGameTests::willBoxFit.name, InGameTests::willBoxFit)
         addId(InGameTests::raycast.name, InGameTests::raycast)
         addId(InGameTests::explode.name, InGameTests::explode)
+        addId(InGameTests::circleCallback.name, InGameTests::circleCallback)
     }
 
     private val suggestions: SuggestionProvider<ServerCommandSource> =
-        SuggestionProviders.register<ServerCommandSource>(
+        SuggestionProviders.register(
             Identifier(MaelstromMod.MODID, "test"),
-            SuggestionProvider<CommandSource> { _, builder ->
+            SuggestionProvider { _, builder ->
                 CommandSource.forEachMatching(
                     tests.keys,
                     builder.remaining.toLowerCase(Locale.ROOT),

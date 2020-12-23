@@ -235,4 +235,47 @@ class TestMathUtils {
 
         Assertions.assertFalse(MathUtils.facingSameDirection(direction1, direction2))
     }
+
+    @Test
+    fun unsignedAngle_Right() {
+        val direction1 = VecUtils.xAxis
+        val direction2 = VecUtils.yAxis
+
+        Assertions.assertEquals(90.0, direction1.unsignedAngle(direction2))
+    }
+
+    @Test
+    fun unsignedAngle_SameVectors() {
+        Assertions.assertEquals(0.0, VecUtils.unit.unsignedAngle(VecUtils.unit))
+    }
+
+    @Test
+    fun unsignedAngle_OppositeVectors() {
+        Assertions.assertEquals(180.0, VecUtils.unit.unsignedAngle(VecUtils.unit.negateServer()))
+    }
+
+    @Test
+    fun directionToYaw_xAxis() {
+        Assertions.assertEquals(0.0, MathUtils.directionToYaw(VecUtils.xAxis))
+    }
+
+    @Test
+    fun directionToYaw_yAxis() {
+        Assertions.assertEquals(0.0, MathUtils.directionToYaw(VecUtils.yAxis))
+    }
+
+    @Test
+    fun directionToYaw_zAxis() {
+        Assertions.assertEquals(90.0, MathUtils.directionToYaw(VecUtils.zAxis))
+    }
+
+    @Test
+    fun directionToYaw_negativeZAxis() {
+        Assertions.assertEquals(-90.0, MathUtils.directionToYaw(VecUtils.zAxis.negate()))
+    }
+
+    @Test
+    fun directionToYaw_negativeXAxis() {
+        Assertions.assertEquals(180.0, MathUtils.directionToYaw(VecUtils.xAxis.negate()))
+    }
 }

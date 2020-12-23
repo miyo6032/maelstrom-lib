@@ -2,6 +2,7 @@ package net.barribob.maelstrom.static_utilities
 
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
+import kotlin.math.acos
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -14,6 +15,22 @@ fun newVec3d(x: Double = 0.0, y: Double = 0.0, z: Double = 0.0): Vec3d = Vec3d(x
 fun BlockPos.asVec3d(): Vec3d = Vec3d(this.x.toDouble(), this.y.toDouble(), this.z.toDouble())
 
 fun Vec3d.negateServer(): Vec3d = this.multiply(-1.0) // Why do you force me to do this mojang
+
+// http://www.java-gaming.org/index.php/topic,28253
+// https://www.omnicalculator.com/math/angle-between-two-vectors#angle-between-two-vectors-formulas
+fun Vec3d.unsignedAngle(b: Vec3d): Double {
+    val dot = this.dotProduct(b)
+    val lengths = this.length() * b.length()
+
+    if (lengths == 0.0) {
+        return 0.0
+    }
+
+    val cos: Double = (dot / lengths)
+        .coerceAtLeast(-1.0)
+        .coerceAtMost(1.0)
+    return Math.toDegrees(acos(cos))
+}
 
 /**
  * Rotate a vector around an axis by given degrees https://stackoverflow.com/questions/31225062/rotating-a-vector-by-angle-and-axis-in-java

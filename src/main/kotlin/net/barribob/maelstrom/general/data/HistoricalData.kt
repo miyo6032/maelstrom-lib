@@ -20,4 +20,6 @@ class HistoricalData <T> (defaultValue: T, private val maxHistory: Int = 2) {
         val clampedPast = (history.size - 1 - past).coerceAtLeast(0)
         return history[clampedPast]
     }
+
+    fun getAll() = history.toList()
 }

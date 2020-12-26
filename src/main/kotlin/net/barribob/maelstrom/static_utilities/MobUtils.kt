@@ -32,6 +32,8 @@ fun Entity.setPos(vec: Vec3d) {
     this.updatePosition(vec.x, vec.y, vec.z)
 }
 
+fun Entity.eyePos(): Vec3d = this.getCameraPosVec(0f)
+
 /**
  * Static utility functions that use or depend [Entity]
  */

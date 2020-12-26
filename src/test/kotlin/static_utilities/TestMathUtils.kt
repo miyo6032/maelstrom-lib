@@ -278,4 +278,12 @@ class TestMathUtils {
     fun directionToYaw_negativeXAxis() {
         Assertions.assertEquals(180.0, MathUtils.directionToYaw(VecUtils.xAxis.negate()))
     }
+
+    @Test
+    fun testConsecutiveSum() {
+        val firstNumber = 1
+        val secondNumber = 100
+
+        Assertions.assertEquals(5050, MathUtils.consecutiveSum(firstNumber, secondNumber))
+    }
 }

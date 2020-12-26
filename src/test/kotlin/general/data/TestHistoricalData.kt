@@ -66,6 +66,16 @@ class TestHistoricalData {
     }
 
     @Test
+    fun testGetAll() {
+        val data = createHistoricalData(0)
+
+        data.set(1)
+        data.set(2)
+
+        Assertions.assertEquals(data.getAll(), listOf(0, 1, 2))
+    }
+
+    @Test
     fun whenMaxHistoryLessThan2_ThrowsError() {
         Assertions.assertThrows(IllegalArgumentException::class.java) { createHistoricalData(0, 1) }
     }

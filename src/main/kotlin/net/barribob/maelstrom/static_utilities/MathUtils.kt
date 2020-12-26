@@ -142,4 +142,9 @@ object MathUtils {
     fun facingSameDirection(direction1: Vec3d, direction2: Vec3d): Boolean {
         return direction1.dotProduct(direction2) > 0
     }
+
+    // https://www.wikihow.com/Add-Consecutive-Integers-from-1-to-100
+    fun consecutiveSum(firstNumber: Int, lastNumber: Int): Int {
+        return ((lastNumber - firstNumber + 1) * ((firstNumber + lastNumber) * 0.5f)).toInt()
+    }
 }

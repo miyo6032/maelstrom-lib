@@ -2,6 +2,7 @@ package static_utilities
 
 import net.barribob.maelstrom.static_utilities.*
 import net.barribob.maelstrom.static_utilities.MathUtils.axisOffset
+import net.barribob.maelstrom.static_utilities.MathUtils.roundedStep
 import net.minecraft.util.math.Vec3d
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -285,5 +286,26 @@ class TestMathUtils {
         val secondNumber = 100
 
         Assertions.assertEquals(5050, MathUtils.consecutiveSum(firstNumber, secondNumber))
+    }
+
+    @Test
+    fun roundedStep_RoundsValueUp() {
+        val result = roundedStep(1f, listOf(0f, 2.0f))
+
+        Assertions.assertEquals(2.0f, result)
+    }
+
+    @Test
+    fun roundedStep_KeepsValueAtSameStep() {
+        val result = roundedStep(2.0f, listOf(0f, 2.0f))
+
+        Assertions.assertEquals(2.0f, result)
+    }
+
+    @Test
+    fun roundedStep_ValueLargerThanLargest() {
+        val result = roundedStep(3.0f, listOf(0f, 2.0f))
+
+        Assertions.assertEquals(2.0f, result)
     }
 }

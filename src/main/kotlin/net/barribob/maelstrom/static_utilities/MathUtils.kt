@@ -147,4 +147,8 @@ object MathUtils {
     fun consecutiveSum(firstNumber: Int, lastNumber: Int): Int {
         return ((lastNumber - firstNumber + 1) * ((firstNumber + lastNumber) * 0.5f)).toInt()
     }
+
+    fun roundedStep(n: Float, steps: List<Float>): Float {
+        return steps.sorted().firstOrNull { it > n } ?: steps.last()
+    }
 }

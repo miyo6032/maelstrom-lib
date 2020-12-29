@@ -37,7 +37,7 @@ object MathUtils {
     @Deprecated("Specific to jumping ai")
     fun findClosestCorner(point: Vec3d, shape: VoxelShape, maxSamples: Int): Vec3d? {
         val corners = shape.boundingBoxes.flatMap { getTopCornersAndEdges(it) }.shuffled().take(maxSamples)
-        return corners.minBy { it.squaredDistanceTo(point) }
+        return corners.minByOrNull { it.squaredDistanceTo(point) }
     }
 
     private fun getTopCornersAndEdges(box: Box): List<Vec3d> {
@@ -148,7 +148,11 @@ object MathUtils {
         return ((lastNumber - firstNumber + 1) * ((firstNumber + lastNumber) * 0.5f)).toInt()
     }
 
-    fun roundedStep(n: Float, steps: List<Float>): Float {
-        return steps.sorted().firstOrNull { it > n } ?: steps.last()
+    fun roundedStep(n: Float, steps: List<Float>, floor: Boolean = false): Float {
+        return if(floor) {
+            steps.sortedDescending().firstOrNull { it <= n } ?: steps.first()
+        } else {
+            steps.sorted().firstOrNull { it > n } ?: steps.last()
+        }
     }
 }

@@ -308,4 +308,32 @@ class TestMathUtils {
 
         Assertions.assertEquals(2.0f, result)
     }
+
+    @Test
+    fun roundedStep_Floor() {
+        val result = roundedStep(1.0f, listOf(0f, 2.0f), true)
+
+        Assertions.assertEquals(0f, result)
+    }
+
+    @Test
+    fun roundedStep_Floor_ValueSmallerThanSmallest() {
+        val result = roundedStep(-1.0f, listOf(0f, 2.0f), true)
+
+        Assertions.assertEquals(0f, result)
+    }
+
+    @Test
+    fun roundedStep_Floor_ValueLargerThanLargest() {
+        val result = roundedStep(3.0f, listOf(0f, 2.0f), true)
+
+        Assertions.assertEquals(2.0f, result)
+    }
+
+    @Test
+    fun roundedStep_Floor_KeepsValueAtSameStep() {
+        val result = roundedStep(2.0f, listOf(0f, 2.0f), true)
+
+        Assertions.assertEquals(2.0f, result)
+    }
 }

@@ -22,18 +22,6 @@ fun Box.corners() = listOf(
 fun Double.format(digits: Int) = "%.${digits}f".format(this)
 
 object MathUtils {
-    /**
-     * Treats input as a vector and finds the length of that vector
-     */
-    // TODO: Unit test
-    fun magnitude(vararg values: Double): Double {
-        var sum = 0.0
-        for (value in values) {
-            sum += value.pow(2.0)
-        }
-        return sqrt(sum)
-    }
-
     @Deprecated("Specific to jumping ai")
     fun findClosestCorner(point: Vec3d, shape: VoxelShape, maxSamples: Int): Vec3d? {
         val corners = shape.boundingBoxes.flatMap { getTopCornersAndEdges(it) }.shuffled().take(maxSamples)

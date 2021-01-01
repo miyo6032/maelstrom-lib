@@ -16,6 +16,10 @@ fun BlockPos.asVec3d(): Vec3d = Vec3d(this.x.toDouble(), this.y.toDouble(), this
 
 fun Vec3d.negateServer(): Vec3d = this.multiply(-1.0) // Why do you force me to do this mojang
 
+fun Vec3d.coerceAtLeast(vec: Vec3d): Vec3d = Vec3d(x.coerceAtLeast(vec.x), y.coerceAtLeast(vec.y), z.coerceAtLeast(vec.z))
+
+fun Vec3d.coerceAtMost(vec: Vec3d): Vec3d = Vec3d(x.coerceAtMost(vec.x), y.coerceAtMost(vec.y), z.coerceAtMost(vec.z))
+
 // http://www.java-gaming.org/index.php/topic,28253
 // https://www.omnicalculator.com/math/angle-between-two-vectors#angle-between-two-vectors-formulas
 fun Vec3d.unsignedAngle(b: Vec3d): Double {

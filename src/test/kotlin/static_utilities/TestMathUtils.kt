@@ -336,4 +336,14 @@ class TestMathUtils {
 
         Assertions.assertEquals(2.0f, result)
     }
+
+    @Test
+    fun testVectorCoerceAtLeast() {
+        assertVecEquals(VecUtils.unit, Vec3d.ZERO.coerceAtLeast(VecUtils.unit))
+    }
+
+    @Test
+    fun testVectorCoerceAtMost() {
+        assertVecEquals(VecUtils.unit, Vec3d(2.0, 2.0, 2.0).coerceAtMost(VecUtils.unit))
+    }
 }

@@ -84,6 +84,12 @@ object MathUtils {
         }
     }
 
+    fun circlePoints(radius: Double, points: Int, axis: Vec3d): Collection<Vec3d> {
+        val vectors = mutableListOf<Vec3d>()
+        circleCallback(radius, points, axis, vectors::add)
+        return vectors
+    }
+
     fun willBoxFit(box: Box, movement: Vec3d, collision: (Box) -> Boolean): Boolean {
         var collided = false
         val points = ceil(movement.length() / box.averageSideLength).toInt()

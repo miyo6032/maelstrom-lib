@@ -25,6 +25,7 @@ object MaelstromMod {
     const val MODID = "maelstrom"
     val DRAW_POINTS_PACKET_ID = Identifier(MODID, "draw_points")
 
+    @Deprecated("Causes unknown behavior across worlds")
     @Environment(EnvType.SERVER)
     val serverEventScheduler = EventScheduler()
 
@@ -39,6 +40,7 @@ object MaelstromMod {
     @Environment(EnvType.CLIENT)
     val renderMap = RenderMap()
 
+    @Deprecated("Causes unknown behavior across worlds")
     @Environment(EnvType.CLIENT)
     val clientEventScheduler = EventScheduler()
 

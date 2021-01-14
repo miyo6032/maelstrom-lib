@@ -1,11 +1,17 @@
 package net.barribob.maelstrom.static_utilities
 
+import net.barribob.maelstrom.MaelstromMod
+import net.barribob.maelstrom.general.event.TimedEvent
 import net.minecraft.entity.Entity
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.projectile.thrown.SnowballEntity
 import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.hit.HitResult
 import net.minecraft.util.math.Box
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.RaycastContext
+import net.minecraft.world.World
 import net.minecraft.world.explosion.Explosion
 
 object InGameTests {
@@ -67,10 +73,10 @@ object InGameTests {
     }
 
     private fun drawLine(
-        pos: Vec3d,
-        target: Vec3d,
-        entity: Entity,
-        color: List<Float>
+            pos: Vec3d,
+            target: Vec3d,
+            entity: Entity,
+            color: List<Float>
     ) {
         val linePoints = mutableListOf<Vec3d>()
         MathUtils.lineCallback(pos, target, 100) { v, _ -> linePoints.add(v) }
@@ -84,5 +90,18 @@ object InGameTests {
         val pos = entity.pos.add(lookOffset)
         val target = pos.add(lookOffset)
         return Pair(pos, target)
+    }
+
+    /**
+     * Server event scheduler causes the server to stop if an entity is spawned across worlds
+     * [World.sendEntityStatus], [ServerWorld.spawnParticles], [Entity.setPos], [Entity.playSound], [ClientServerUtils.drawDebugPoints]
+     * do not seem to have this effect. In any case, we must avoid using this event schedule to avoid undefined behavior
+     */
+    fun unknownBehaviorWithSchedulersAcrossWorlds(source: ServerCommandSource) {
+        val world = source.world
+        val entity = source.entityOrThrow
+        MaelstromMod.serverEventScheduler.addEvent(TimedEvent({
+            world.spawnEntity(SnowballEntity(world, entity as LivingEntity))
+        }, 100))
     }
 }

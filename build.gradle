@@ -50,9 +50,6 @@ dependencies {
             'org.hamcrest:hamcrest-library:2.2'
     )
     testRuntime('org.junit.jupiter:junit-jupiter-engine:5.4.2')
-
-    api "com.typesafe:config:${project.config_version}"
-    include "com.typesafe:config:${project.config_version}"
 }
 
 processResources {

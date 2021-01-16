@@ -14,7 +14,7 @@ import java.nio.file.StandardCopyOption
 
 data class Config<T>(val data: T, val configVersion: String)
 
-@Deprecated("Use VersionedConfigLoader")
+@Deprecated("Use a config library")
 class ConfigManager {
 
     fun <T> handleConfigLoad(defaultConfig: Config<T>, typeToken: TypeToken<Config<T>>, modid: String): T {

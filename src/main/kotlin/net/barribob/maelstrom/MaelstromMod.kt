@@ -1,7 +1,6 @@
 package net.barribob.maelstrom
 
 import net.barribob.maelstrom.general.ConfigManager
-import net.barribob.maelstrom.general.command.ReloadConfigCommand
 import net.barribob.maelstrom.general.command.TestArgumentType
 import net.barribob.maelstrom.general.command.TestCommand
 import net.barribob.maelstrom.general.event.EventScheduler
@@ -44,15 +43,6 @@ object MaelstromMod {
     @Environment(EnvType.CLIENT)
     val clientEventScheduler = EventScheduler()
 
-    @Environment(EnvType.SERVER)
-    val configRegistry = ConfigRegistry(
-        VersionedConfigLoader(
-            LOGGER, ConfigVersionFactory(), ModFileManager(
-                LOGGER
-            )
-        )
-    )
-
     val testCommand = TestCommand()
 }
 
@@ -65,8 +55,6 @@ fun init() {
         "${MaelstromMod.MODID}:libtest",
         TestArgumentType::class.java,
         ConstantArgumentSerializer { TestArgumentType(MaelstromMod.testCommand) })
-
-    CommandRegistrationCallback.EVENT.register(ReloadConfigCommand())
 }
 
 @Environment(EnvType.CLIENT)

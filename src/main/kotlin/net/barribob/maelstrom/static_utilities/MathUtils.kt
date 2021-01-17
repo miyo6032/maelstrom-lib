@@ -22,28 +22,6 @@ fun Box.corners() = listOf(
 fun Double.format(digits: Int) = "%.${digits}f".format(this)
 
 object MathUtils {
-    @Deprecated("Specific to jumping ai")
-    fun findClosestCorner(point: Vec3d, shape: VoxelShape, maxSamples: Int): Vec3d? {
-        val corners = shape.boundingBoxes.flatMap { getTopCornersAndEdges(it) }.shuffled().take(maxSamples)
-        return corners.minByOrNull { it.squaredDistanceTo(point) }
-    }
-
-    private fun getTopCornersAndEdges(box: Box): List<Vec3d> {
-        val halfX = box.xLength * 0.5
-        val halfZ = box.zLength * 0.5
-
-        return listOf(
-            Vec3d(box.minX, box.maxY, box.minZ),
-            Vec3d(box.maxX, box.maxY, box.minZ),
-            Vec3d(box.minX, box.maxY, box.maxZ),
-            Vec3d(box.maxX, box.maxY, box.maxZ),
-            Vec3d(box.minX + halfX, box.maxY, box.minZ),
-            Vec3d(box.minX, box.maxY, box.minZ + halfZ),
-            Vec3d(box.maxX, box.maxY, box.minZ + halfZ),
-            Vec3d(box.minX + halfX, box.maxY, box.maxZ)
-        )
-    }
-
     fun withinDistance(pos1: Vec3d, pos2: Vec3d, distance: Double): Boolean {
         if (distance < 0) throw IllegalArgumentException("Distance cannot be negative")
         return pos1.squaredDistanceTo(pos2) < distance.pow(2.0)

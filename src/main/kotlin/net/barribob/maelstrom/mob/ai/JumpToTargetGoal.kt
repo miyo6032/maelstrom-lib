@@ -138,7 +138,7 @@ class JumpToTargetGoal(private val entity: MobEntity) : Goal() {
         }
         val callback = {
             val movePos = entity.pos.add(jumpData.direction.multiply(3.0))
-            entity.moveControl.moveTo(movePos.x, movePos.y, movePos.z, jumpForwardSpeed)
+            if(!entity.isOnGround) entity.moveControl.moveTo(movePos.x, movePos.y, movePos.z, jumpForwardSpeed)
         }
         val shouldCancel = { !entity.isAlive || entity.isOnGround }
         MaelstromMod.serverEventScheduler.addEvent(TimedEvent(callback, 0, forwardMovementTicks, shouldCancel))

@@ -8,7 +8,7 @@ class TimedEvent(
 
     var age = 0
 
-    override fun shouldDoEvent(): Boolean = age++ >= delay
+    override fun shouldDoEvent(): Boolean = age++ >= delay && !shouldCancel()
 
     override fun doEvent() = callback()
 

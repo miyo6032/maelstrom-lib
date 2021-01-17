@@ -64,7 +64,7 @@ class TestTimedEvent {
         val eventManager = EventScheduler()
         var eventStr = ""
 
-        eventManager.addEvent(TimedEvent({ eventStr += "Should not be assigned!" }, 1, shouldCancel = { true }))
+        eventManager.addEvent(TimedEvent({ eventStr += "Should not be assigned!" }, 0, shouldCancel = { true }))
         eventManager.updateEvents()
         eventManager.updateEvents()
         assertEquals("", eventStr)
@@ -81,5 +81,18 @@ class TestTimedEvent {
             eventManager.updateEvents()
         }
         assertEquals(3, eventsFired)
+    }
+
+    @Test
+    fun eventMidwayCancel() {
+        val eventManager = EventScheduler()
+        var timesRun = 0
+        val cancelAfterThreeRuns = { timesRun == 3 }
+
+        eventManager.addEvent(TimedEvent({ timesRun++ }, 0, 10, cancelAfterThreeRuns))
+        for(i in 0..10) {
+            eventManager.updateEvents()
+        }
+        assertEquals(3, timesRun)
     }
 }

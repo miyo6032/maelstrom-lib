@@ -14,14 +14,14 @@ import net.minecraft.world.RaycastContext
 import net.minecraft.world.World
 import net.minecraft.world.explosion.Explosion
 
-object InGameTests {
+class InGameTests(private val debugPoints: DebugPointsNetworkHandler) {
     fun lineCallback(source: ServerCommandSource) {
         val entity = source.entityOrThrow
         val direction = entity.rotationVector.multiply(3.0)
         val linePoints = mutableListOf<Vec3d>()
         val pos = entity.getCameraPosVec(1f)
         MathUtils.lineCallback(pos, pos.add(direction), 10) { v, _ -> linePoints.add(v) }
-        ClientServerUtils.drawDebugPoints(linePoints, 1, pos, entity.world)
+        debugPoints.drawDebugPoints(linePoints, 1, pos, source.world)
     }
 
     fun circleCallback(source: ServerCommandSource) {
@@ -30,13 +30,13 @@ object InGameTests {
         val linePoints = mutableListOf<Vec3d>()
         val pos = entity.getCameraPosVec(1f)
         MathUtils.circleCallback(2.0, 7, direction) { linePoints.add(it.add(pos)) }
-        ClientServerUtils.drawDebugPoints(linePoints, 1, pos, entity.world)
+        debugPoints.drawDebugPoints(linePoints, 1, pos, source.world)
     }
 
     fun boxCorners(source: ServerCommandSource) {
         val entity = source.entityOrThrow
         val box = entity.boundingBox
-        ClientServerUtils.drawDebugPoints(box.corners(), 40, entity.pos, entity.world)
+        debugPoints.drawDebugPoints(box.corners(), 40, entity.pos, source.world)
     }
 
     fun willBoxFit(source: ServerCommandSource) {
@@ -51,7 +51,7 @@ object InGameTests {
         MathUtils.willBoxFit(box, scanDistance) { b ->
             val fits = entity.world.isSpaceEmpty(entity, b)
             val color = if (fits) listOf(1f, 1f, 1f, 1f) else listOf(1f, 0f, 0f, 1f)
-            ClientServerUtils.drawDebugPoints(b.corners(), 1, entity.pos, entity.world, color)
+            debugPoints.drawDebugPoints(b.corners(), 1, entity.pos, source.world, color)
             return@willBoxFit !fits
         }
     }
@@ -64,25 +64,15 @@ object InGameTests {
         val collided = blockCollision.type != HitResult.Type.MISS
 
         val color = if (!collided) listOf(1f, 1f, 1f, 1f) else listOf(1f, 0f, 0f, 1f)
-        drawLine(pos, target, entity, color)
+        val linePoints = mutableListOf<Vec3d>()
+        MathUtils.lineCallback(pos, target, 100) { v, _ -> linePoints.add(v) }
+        debugPoints.drawDebugPoints(linePoints, 1, pos, source.world, color)
     }
 
     fun explode(source: ServerCommandSource) {
         val e = source.entityOrThrow
         source.world.createExplosion(e, e.x, e.y, e.z, 9f, Explosion.DestructionType.DESTROY)
     }
-
-    private fun drawLine(
-            pos: Vec3d,
-            target: Vec3d,
-            entity: Entity,
-            color: List<Float>
-    ) {
-        val linePoints = mutableListOf<Vec3d>()
-        MathUtils.lineCallback(pos, target, 100) { v, _ -> linePoints.add(v) }
-        ClientServerUtils.drawDebugPoints(linePoints, 1, pos, entity.world, color)
-    }
-
 
     private fun getLineOffsets(entity: Entity, offset: Double = 3.0): Pair<Vec3d, Vec3d> {
         val look = entity.rotationVector
@@ -94,7 +84,7 @@ object InGameTests {
 
     /**
      * Server event scheduler causes the server to stop if an entity is spawned across worlds
-     * [World.sendEntityStatus], [ServerWorld.spawnParticles], [Entity.setPos], [Entity.playSound], [ClientServerUtils.drawDebugPoints]
+     * [World.sendEntityStatus], [ServerWorld.spawnParticles], [Entity.setPos], [Entity.playSound], [DebugPointsNetworkHandler.drawDebugPoints]
      * do not seem to have this effect. In any case, we must avoid using this event schedule to avoid undefined behavior
      */
     fun unknownBehaviorWithSchedulersAcrossWorlds(source: ServerCommandSource) {

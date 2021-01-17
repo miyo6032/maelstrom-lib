@@ -7,13 +7,14 @@ import net.barribob.maelstrom.general.event.EventScheduler
 import net.barribob.maelstrom.general.io.*
 import net.barribob.maelstrom.mob.AIManager
 import net.barribob.maelstrom.render.RenderMap
-import net.barribob.maelstrom.static_utilities.ClientServerUtils
+import net.barribob.maelstrom.static_utilities.DebugPointsNetworkHandler
+import net.barribob.maelstrom.static_utilities.InGameTests
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
 import net.minecraft.command.argument.ArgumentTypes
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer
 import net.minecraft.util.Identifier
@@ -43,7 +44,8 @@ object MaelstromMod {
     @Environment(EnvType.CLIENT)
     val clientEventScheduler = EventScheduler()
 
-    val testCommand = TestCommand()
+    val debugPoints = DebugPointsNetworkHandler()
+    val testCommand = TestCommand(InGameTests(debugPoints))
 }
 
 @Suppress("unused")
@@ -61,7 +63,7 @@ fun init() {
 @Suppress("unused")
 fun clientInit() {
     ClientTickEvents.START_CLIENT_TICK.register(ClientTickEvents.StartTick { MaelstromMod.clientEventScheduler.updateEvents() })
-    ClientSidePacketRegistry.INSTANCE.register(MaelstromMod.DRAW_POINTS_PACKET_ID) { packetContext, packetData ->
-        ClientServerUtils.drawDebugPointsClient(packetContext, packetData)
+    ClientPlayNetworking.registerGlobalReceiver(MaelstromMod.DRAW_POINTS_PACKET_ID) { client, _, buf, _ ->
+        MaelstromMod.debugPoints.drawDebugPointsClient(client, buf)
     }
 }

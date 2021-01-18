@@ -4,7 +4,6 @@ import net.barribob.maelstrom.general.math.ReferencedAxisRotator
 import net.minecraft.util.math.Box
 import net.minecraft.util.math.MathHelper
 import net.minecraft.util.math.Vec3d
-import net.minecraft.util.shape.VoxelShape
 import kotlin.math.*
 
 fun Box.corners() = listOf(

@@ -1,6 +1,5 @@
 package net.barribob.maelstrom
 
-import net.barribob.maelstrom.general.ConfigManager
 import net.barribob.maelstrom.general.command.TestArgumentType
 import net.barribob.maelstrom.general.command.TestCommand
 import net.barribob.maelstrom.general.event.EventScheduler
@@ -31,9 +30,6 @@ object MaelstromMod {
 
     @Environment(EnvType.SERVER)
     val aiManager = AIManager()
-
-    @Environment(EnvType.SERVER)
-    val configManager = ConfigManager()
 
     val LOGGER: ILogger = ConsoleLogger(LogManager.getLogger())
 

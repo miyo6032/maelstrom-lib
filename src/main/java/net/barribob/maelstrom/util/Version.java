@@ -2,7 +2,10 @@ package net.barribob.maelstrom.util;
 
 import org.jetbrains.annotations.Nullable;
 
-// CREDIT: https://stackoverflow.com/questions/198431/how-do-you-compare-two-version-strings-in-java
+/*
+    CREDIT: https://stackoverflow.com/questions/198431/how-do-you-compare-two-version-strings-in-java
+    Under creative commons 3.0: https://creativecommons.org/licenses/by-sa/3.0/
+ */
 public class Version implements Comparable<Version> {
 
     private final String version;

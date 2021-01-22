@@ -2,7 +2,7 @@ package net.barribob.maelstrom.general
 
 object IdProviders {
     val INCREMENT = { ids: Collection<Int> ->
-        val maxId = ids.max()
+        val maxId = ids.maxOrNull()
         if (maxId != null) maxId + 1 else 0
     }
 }

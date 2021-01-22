@@ -8,6 +8,7 @@ import com.mojang.brigadier.suggestion.SuggestionProvider
 import net.barribob.maelstrom.MaelstromMod
 import net.barribob.maelstrom.general.event.TimedEvent
 import net.barribob.maelstrom.static_utilities.InGameTests
+import net.barribob.maelstrom.static_utilities.format
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback
 import net.minecraft.command.CommandSource
 import net.minecraft.command.suggestion.SuggestionProviders
@@ -16,8 +17,9 @@ import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.text.LiteralText
 import net.minecraft.util.Identifier
 import java.util.*
+import kotlin.system.measureNanoTime
 
-class TestCommand : CommandRegistrationCallback {
+class TestCommand(inGameTests: InGameTests) : CommandRegistrationCallback {
     private val notFoundException = DynamicCommandExceptionType { LiteralText("Test name not found") }
 
     private val tests = mutableMapOf<Identifier, (ServerCommandSource) -> Unit>()
@@ -25,13 +27,19 @@ class TestCommand : CommandRegistrationCallback {
     private val nameArgumentName = "name"
 
     init {
-        addId(InGameTests::lineCallback.name, InGameTests::lineCallback)
+        addId(inGameTests::lineCallback.name, inGameTests::lineCallback)
+        addId(inGameTests::boxCorners.name, inGameTests::boxCorners)
+        addId(inGameTests::willBoxFit.name, inGameTests::willBoxFit)
+        addId(inGameTests::raycast.name, inGameTests::raycast)
+        addId(inGameTests::explode.name, inGameTests::explode)
+        addId(inGameTests::circleCallback.name, inGameTests::circleCallback)
+        addId(inGameTests::unknownBehaviorWithSchedulersAcrossWorlds.name, inGameTests::unknownBehaviorWithSchedulersAcrossWorlds)
     }
 
     private val suggestions: SuggestionProvider<ServerCommandSource> =
-        SuggestionProviders.register<ServerCommandSource>(
+        SuggestionProviders.register(
             Identifier(MaelstromMod.MODID, "test"),
-            SuggestionProvider<CommandSource> { _, builder ->
+            SuggestionProvider { _, builder ->
                 CommandSource.forEachMatching(
                     tests.keys,
                     builder.remaining.toLowerCase(Locale.ROOT),
@@ -40,7 +48,7 @@ class TestCommand : CommandRegistrationCallback {
                 return@SuggestionProvider builder.buildFuture()
             })
 
-    private fun addId(
+    fun addId(
         name: String,
         callback: (ServerCommandSource) -> Unit
     ) = tests.put(Identifier(MaelstromMod.MODID, name.toLowerCase(Locale.ROOT)), callback)
@@ -64,10 +72,11 @@ class TestCommand : CommandRegistrationCallback {
     private fun run(context: CommandContext<ServerCommandSource>, ticks: Int = 1): Int {
         val identifier = context.getArgument(nameArgumentName, Identifier::class.java)
         validate(identifier)
+        var time = 0L
 
         val runTest: () -> Unit = {
             try {
-                tests[identifier]?.invoke(context.source)
+                time += measureNanoTime { tests[identifier]?.invoke(context.source) }
             } catch (e: Exception) {
                 context.source.sendFeedback(LiteralText(e.message), false)
                 e.printStackTrace()
@@ -75,6 +84,12 @@ class TestCommand : CommandRegistrationCallback {
         }
 
         MaelstromMod.serverEventScheduler.addEvent(TimedEvent(runTest, 0, ticks))
+        MaelstromMod.serverEventScheduler.addEvent(TimedEvent({
+            context.source.sendFeedback(
+                LiteralText("Test(s) ran using ${((time / ticks) * 1e-6).format(3)} ms of runtime"),
+                false
+            )
+        }, ticks))
 
         return 1
     }

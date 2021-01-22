@@ -1,11 +1,11 @@
 package static_utilities
 
 import io.netty.buffer.Unpooled
-import net.barribob.maelstrom.static_utilities.readFloatList
-import net.barribob.maelstrom.static_utilities.writeFloatList
+import net.barribob.maelstrom.static_utilities.*
 import net.minecraft.network.PacketByteBuf
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import testing_utilities.assertVecEquals
 
 class TestPacketUtils {
     @Test
@@ -30,5 +30,16 @@ class TestPacketUtils {
         packet.writeFloatList(expected)
         val actual = packet.readFloatList(2)
         Assertions.assertEquals(expected, actual)
+    }
+
+    @Test
+    fun testReadAndWriteVec3d() {
+        val packet = PacketByteBuf(Unpooled.buffer())
+        val expected = VecUtils.xAxis
+
+        packet.writeVec3d(expected)
+        val actual = packet.readVec3d()
+
+        assertVecEquals(expected, actual)
     }
 }

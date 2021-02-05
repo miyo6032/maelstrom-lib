@@ -126,4 +126,18 @@ object MathUtils {
             steps.sorted().firstOrNull { it > n } ?: steps.last()
         }
     }
+
+    fun buildBlockCircle(radius: Int): List<Vec3d> {
+        val radiusSq = radius * radius
+        val points = mutableListOf<Vec3d>()
+        for (x in -radius..radius) {
+            for (z in -radius..radius) {
+                val pos = Vec3d(x.toDouble(), 0.0, z.toDouble())
+                if (pos.lengthSquared() <= radiusSq) {
+                    points.add(pos)
+                }
+            }
+        }
+        return points
+    }
 }

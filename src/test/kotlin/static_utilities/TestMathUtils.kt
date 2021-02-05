@@ -2,6 +2,7 @@ package static_utilities
 
 import net.barribob.maelstrom.static_utilities.*
 import net.barribob.maelstrom.static_utilities.MathUtils.axisOffset
+import net.barribob.maelstrom.static_utilities.MathUtils.buildBlockCircle
 import net.barribob.maelstrom.static_utilities.MathUtils.roundedStep
 import net.minecraft.util.math.Vec3d
 import org.junit.jupiter.api.Assertions
@@ -345,5 +346,16 @@ class TestMathUtils {
     @Test
     fun testVectorCoerceAtMost() {
         assertVecEquals(VecUtils.unit, Vec3d(2.0, 2.0, 2.0).coerceAtMost(VecUtils.unit))
+    }
+
+    @Test
+    fun buildBlockCircle_Radius1() {
+        val points = buildBlockCircle(1)
+
+        Assertions.assertTrue(points.contains(Vec3d.ZERO))
+        Assertions.assertTrue(points.contains(VecUtils.xAxis))
+        Assertions.assertTrue(points.contains(VecUtils.zAxis))
+        Assertions.assertTrue(points.contains(newVec3d(-1.0)))
+        Assertions.assertTrue(points.contains(newVec3d(z = -1.0)))
     }
 }

@@ -350,7 +350,7 @@ class TestMathUtils {
 
     @Test
     fun buildBlockCircle_Radius1() {
-        val points = buildBlockCircle(1)
+        val points = buildBlockCircle(1.0)
 
         Assertions.assertTrue(points.contains(Vec3d.ZERO))
         Assertions.assertTrue(points.contains(VecUtils.xAxis))

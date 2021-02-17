@@ -51,7 +51,7 @@ class TestCommand(inGameTests: InGameTests) : CommandRegistrationCallback {
     fun addId(
         name: String,
         callback: (ServerCommandSource) -> Unit
-    ) = tests.put(Identifier(MaelstromMod.MODID, name.toLowerCase(Locale.ROOT)), callback)
+    ) = tests.put(Identifier(name.toLowerCase(Locale.ROOT)), callback)
 
     override fun register(dispatcher: CommandDispatcher<ServerCommandSource>, p1: Boolean) {
         val commandName = "libtest"

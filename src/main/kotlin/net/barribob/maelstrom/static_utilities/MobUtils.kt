@@ -12,7 +12,7 @@ fun Entity.setPos(vec: Vec3d) {
     this.updatePosition(vec.x, vec.y, vec.z)
 }
 
-fun Entity.eyePos(): Vec3d = this.getCameraPosVec(0f)
+fun Entity.eyePos(): Vec3d = this.getCameraPosVec(1f)
 
 val Entity.registryId: String
     get() = Registry.ENTITY_TYPE.getId(type).toString()

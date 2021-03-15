@@ -1,6 +1,7 @@
 package net.barribob.maelstrom.general.data
 
-class HistoricalData<T>(defaultValue: T, private val maxHistory: Int = 2) : IHistoricalData<T> {
+// Todo: Implement list/collection interface
+class HistoricalData<T>(defaultValue: T, val maxHistory: Int = 2) : IHistoricalData<T> {
     private val history = mutableListOf(defaultValue)
 
     init {
@@ -22,6 +23,7 @@ class HistoricalData<T>(defaultValue: T, private val maxHistory: Int = 2) : IHis
     }
 
     override fun getAll() = history.toList()
+    fun getSize() = history.size
 
     fun clear() {
         history.clear()

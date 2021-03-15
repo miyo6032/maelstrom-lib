@@ -14,5 +14,8 @@ fun Entity.setPos(vec: Vec3d) {
 
 fun Entity.eyePos(): Vec3d = this.getCameraPosVec(1f)
 
+val Entity.lastRenderPos: Vec3d
+    get() = Vec3d(this.lastRenderX, this.lastRenderY, this.lastRenderZ)
+
 val Entity.registryId: String
     get() = Registry.ENTITY_TYPE.getId(type).toString()

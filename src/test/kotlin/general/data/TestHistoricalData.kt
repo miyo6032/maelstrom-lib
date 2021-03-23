@@ -76,6 +76,17 @@ class TestHistoricalData {
     }
 
     @Test
+    fun testMaxSize() {
+        val data = createHistoricalData(0, 4)
+
+        for(i in 0..10) {
+            data.set(0)
+        }
+
+        Assertions.assertEquals(4, data.getSize())
+    }
+
+    @Test
     fun whenMaxHistoryLessThan2_ThrowsError() {
         Assertions.assertThrows(IllegalArgumentException::class.java) { createHistoricalData(0, 1) }
     }

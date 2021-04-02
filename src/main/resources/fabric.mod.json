@@ -4,17 +4,13 @@
   "version": "${version}",
 
   "name": "Maelstrom Library",
-  "description": "",
+  "description": "General Utility Mod for Barribob's Mods",
   "authors": [
     "Barribob"
   ],
-  "contact": {
-    "homepage": "",
-    "sources": "",
-    "issues": ""
-  },
+  "contact": {},
 
-  "license": "",
+  "license": "GNU LESSER GENERAL PUBLIC LICENSE",
   "icon": "assets/maelstrom/icon.png",
 
   "environment": "*",

@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "net.barribob.maelstrom.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_16",
   "mixins": [
     "AIManipulationMixin"
   ],

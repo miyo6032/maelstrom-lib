@@ -84,7 +84,7 @@ object MathUtils {
         val z: Double = direction.z
         val y: Double = direction.y
 
-        val h = MathHelper.sqrt(x * x + z * z).toDouble()
+        val h = sqrt(x * x + z * z)
         return (Math.toDegrees(-(MathHelper.atan2(y, h)))).toFloat()
     }
 

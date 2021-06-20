@@ -91,5 +91,21 @@ class TestHistoricalData {
         Assertions.assertThrows(IllegalArgumentException::class.java) { createHistoricalData(0, 1) }
     }
 
-    private fun createHistoricalData(defaultValue: Int, maxHistory: Int = 3) = HistoricalData(defaultValue, maxHistory)
+    @Test
+    fun testNoInitialValue() {
+        val data = createHistoricalData()
+
+        data.set(0)
+
+        Assertions.assertEquals(0, data.get())
+    }
+
+    @Test
+    fun whenNoInitialValue_() {
+        val data = createHistoricalData()
+
+        Assertions.assertEquals(0, data.get())
+    }
+
+    private fun createHistoricalData(defaultValue: Int? = null, maxHistory: Int = 3) = HistoricalData(defaultValue, maxHistory)
 }

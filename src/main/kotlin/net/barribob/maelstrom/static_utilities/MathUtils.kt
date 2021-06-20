@@ -1,6 +1,7 @@
 package net.barribob.maelstrom.static_utilities
 
 import net.barribob.maelstrom.general.math.ReferencedAxisRotator
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
 import net.minecraft.util.math.MathHelper
 import net.minecraft.util.math.Vec3d
@@ -120,7 +121,7 @@ object MathUtils {
     }
 
     fun roundedStep(n: Float, steps: List<Float>, floor: Boolean = false): Float {
-        return if(floor) {
+        return if (floor) {
             steps.sortedDescending().firstOrNull { it <= n } ?: steps.first()
         } else {
             steps.sorted().firstOrNull { it > n } ?: steps.last()
@@ -137,6 +138,81 @@ object MathUtils {
                 if (pos.lengthSquared() <= radiusSq) {
                     points.add(pos)
                 }
+            }
+        }
+        return points
+    }
+
+    // https://www.geeksforgeeks.org/bresenhams-algorithm-for-3-d-line-drawing/
+    fun getBlocksInLine(startPos: BlockPos, endPos: BlockPos) : List<BlockPos> {
+        var x1 = startPos.x
+        var y1 = startPos.y
+        var z1 = startPos.z
+        val x2 = endPos.x
+        val y2 = endPos.y
+        val z2 = endPos.z
+        val points = mutableListOf(startPos)
+        val dx = abs(x2 - x1)
+        val dy = abs(y2 - y1)
+        val dz = abs(z2 - z1)
+        val xs = if (x2 > x1) 1 else -1
+        val ys = if (y2 > y1) 1 else -1
+        val zs = if (z2 > z1) 1 else -1
+
+        if (dx >= dy && dx >= dz) {
+            var p1 = 2 * dy - dx
+            var p2 = 2 * dz - dx
+            while (x1 != x2) {
+                x1 += xs
+                if (p1 >= 0) {
+                    y1 += ys
+                    p1 -= 2 * dx
+                }
+                if (p2 >= 0) {
+                    z1 += zs
+                    p2 -= 2 * dx
+                }
+                p1 += 2 * dy
+                p2 += 2 * dz
+                points.add(BlockPos(x1, y1, z1))
+            }
+        }
+
+        else if (dy >= dx && dy >= dz) {
+            var p1 = 2 * dx - dy
+            var p2 = 2 * dz - dy
+            while (y1 != y2) {
+                y1 += ys
+                if (p1 >= 0) {
+                    x1 += xs
+                    p1 -= 2 * dy
+                }
+                if (p2 >= 0) {
+                    z1 += zs
+                    p2 -= 2 * dy
+                }
+                p1 += 2 * dx
+                p2 += 2 * dz
+                points.add(BlockPos(x1, y1, z1))
+            }
+        }
+
+        else {
+            var p1 = 2 * dy - dz
+            var p2 = 2 * dx - dz
+            while (z1 != z2) {
+                z1 += zs
+                if (p1 >= 0) {
+                    y1 += ys
+                    p1 -= 2 * dz
+                }
+                if (p2 >= 0) {
+                    x1 += xs
+                    p2 -= 2 * dz
+                }
+                p1 += 2 * dy
+                p2 += 2 * dx
+                points.add(BlockPos(x1, y1, z1))
             }
         }
         return points

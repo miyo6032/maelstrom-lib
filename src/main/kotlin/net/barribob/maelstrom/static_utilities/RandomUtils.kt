@@ -26,8 +26,18 @@ object RandomUtils {
         return min + rand.nextInt(range)
     }
 
+    fun range(min: Double, max: Double): Double {
+        require(min <= max) { "Minimum is greater than maximum" }
+        val range = max - min
+        return min + rand.nextDouble() * range
+    }
+
     // TODO: Command test
     fun randVec(rand: () -> Double = { Random.nextDouble() - 0.5 }): Vec3d {
         return Vec3d(rand(), rand(), rand())
+    }
+
+    fun randSign(): Int {
+        return if (rand.nextInt(2) == 0) 1 else -1
     }
 }

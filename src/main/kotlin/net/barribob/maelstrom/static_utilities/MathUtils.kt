@@ -217,4 +217,13 @@ object MathUtils {
         }
         return points
     }
+
+    fun ratioLerp(time: Float, ratio: Float, maxAge: Float, partialTicks: Float): Float {
+        assert(ratio <= 1)
+        assert(ratio >= 0)
+        assert(maxAge > 0)
+
+        val currentTime = MathHelper.clamp((time + partialTicks) / maxAge, 0f, 1f)
+        return max(0f, currentTime - ratio) / (1 - ratio)
+    }
 }

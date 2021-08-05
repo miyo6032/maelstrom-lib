@@ -7,6 +7,8 @@ import net.barribob.maelstrom.static_utilities.MathUtils.roundedStep
 import net.minecraft.util.math.Vec3d
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import testing_utilities.assertVecEquals
 
 class TestMathUtils {
@@ -357,5 +359,22 @@ class TestMathUtils {
         Assertions.assertTrue(points.contains(VecUtils.zAxis))
         Assertions.assertTrue(points.contains(newVec3d(-1.0)))
         Assertions.assertTrue(points.contains(newVec3d(z = -1.0)))
+    }
+
+    @ParameterizedTest
+    @CsvSource (
+        "0.5f, 0.5f, 0.0f",
+        "0.75f, 0.5f, 0.5f",
+        "1.0f, 0.5f, 1.0f",
+        "0.75f, 0.75f, 0.0f",
+        "0.875f, 0.75f, 0.5f",
+        "1.0f, 0.75f, 1.0f",
+        "1.1f, 0.5f, 1.0f",
+        "0.5f, 0.0f, 0.5f",
+        "0.0f, 0.5f, 0.0f"
+        )
+    fun testRatioLerp(time: Float, ratio: Float, result: Float) {
+        val actual = MathUtils.ratioLerp(time, ratio, 1f, 0f)
+        Assertions.assertEquals(result, actual)
     }
 }

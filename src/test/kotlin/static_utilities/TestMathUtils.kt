@@ -4,6 +4,7 @@ import net.barribob.maelstrom.static_utilities.*
 import net.barribob.maelstrom.static_utilities.MathUtils.axisOffset
 import net.barribob.maelstrom.static_utilities.MathUtils.buildBlockCircle
 import net.barribob.maelstrom.static_utilities.MathUtils.roundedStep
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -376,5 +377,18 @@ class TestMathUtils {
     fun testRatioLerp(time: Float, ratio: Float, result: Float) {
         val actual = MathUtils.ratioLerp(time, ratio, 1f, 0f)
         Assertions.assertEquals(result, actual)
+    }
+
+    @Test
+    fun getBlocksInLine_AscendingDistances() {
+        val start = BlockPos(10, -10, 10)
+        val end = BlockPos(3, 3, -3)
+
+        val blocks = MathUtils.getBlocksInLine(start, end)
+
+        val comparisons = blocks.map { it.getSquaredDistance(start) }.zipWithNext().map { it.first < it.second }
+        for(comparison in comparisons) {
+            Assertions.assertTrue(comparison)
+        }
     }
 }

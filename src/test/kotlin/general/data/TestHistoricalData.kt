@@ -100,12 +100,5 @@ class TestHistoricalData {
         Assertions.assertEquals(0, data.get())
     }
 
-    @Test
-    fun whenNoInitialValue_() {
-        val data = createHistoricalData()
-
-        Assertions.assertEquals(0, data.get())
-    }
-
     private fun createHistoricalData(defaultValue: Int? = null, maxHistory: Int = 3) = HistoricalData(defaultValue, maxHistory)
 }

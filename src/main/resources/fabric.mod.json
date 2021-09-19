@@ -19,7 +19,7 @@
       "net.barribob.maelstrom.MaelstromModKt::init"
     ],
     "client": [
-      "net.barribob.maelstrom.MaelstromModKt::clientInit"
+      "net.barribob.maelstrom.MaelstromModClientKt::clientInit"
     ]
   },
   "mixins": [

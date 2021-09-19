@@ -4,15 +4,14 @@ import net.barribob.maelstrom.MaelstromMod.isDevelopmentEnvironment
 import net.barribob.maelstrom.general.command.TestArgumentType
 import net.barribob.maelstrom.general.command.TestCommand
 import net.barribob.maelstrom.general.event.EventScheduler
-import net.barribob.maelstrom.general.io.*
+import net.barribob.maelstrom.general.io.ConsoleLogger
+import net.barribob.maelstrom.general.io.ILogger
 import net.barribob.maelstrom.mob.AIManager
 import net.barribob.maelstrom.render.RenderMap
 import net.barribob.maelstrom.static_utilities.DebugPointsNetworkHandler
 import net.barribob.maelstrom.static_utilities.InGameTests
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.loader.api.FabricLoader
@@ -48,19 +47,10 @@ object MaelstromMod {
     val isDevelopmentEnvironment = FabricLoader.getInstance().isDevelopmentEnvironment
 }
 
-@Suppress("unused")
 fun init() {
     ServerTickEvents.START_SERVER_TICK.register(ServerTickEvents.StartTick { MaelstromMod.serverEventScheduler.updateEvents() })
 
     if(isDevelopmentEnvironment) initDev()
-}
-
-@Environment(EnvType.CLIENT)
-@Suppress("unused")
-fun clientInit() {
-    ClientTickEvents.START_CLIENT_TICK.register(ClientTickEvents.StartTick { MaelstromMod.clientEventScheduler.updateEvents() })
-
-    if(isDevelopmentEnvironment) clientInitDev()
 }
 
 private fun initDev() {
@@ -69,11 +59,4 @@ private fun initDev() {
         "${MaelstromMod.MODID}:libtest",
         TestArgumentType::class.java,
         ConstantArgumentSerializer { TestArgumentType(MaelstromMod.testCommand) })
-}
-
-@Environment(EnvType.CLIENT)
-private fun clientInitDev() {
-    ClientPlayNetworking.registerGlobalReceiver(MaelstromMod.DRAW_POINTS_PACKET_ID) { client, _, buf, _ ->
-        MaelstromMod.debugPoints.drawDebugPointsClient(client, buf)
-    }
 }

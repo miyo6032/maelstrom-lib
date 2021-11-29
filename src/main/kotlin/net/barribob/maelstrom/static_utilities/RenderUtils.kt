@@ -23,10 +23,10 @@ object RenderUtils {
 
         (points.indices step 3).forEach {
             bufferBuilder
-                .vertex(renderData.matrixStack.peek().model, points[it], points[it + 1], points[it + 2])
+                .vertex(renderData.matrixStack.peek().positionMatrix, points[it], points[it + 1], points[it + 2])
                 .color(color[0], color[1], color[2], color[3]).next()
             bufferBuilder
-                .vertex(renderData.matrixStack.peek().model, points[it] + 0.01f, points[it + 1] + 0.01f, points[it + 2] + 0.01f)
+                .vertex(renderData.matrixStack.peek().positionMatrix, points[it] + 0.01f, points[it + 1] + 0.01f, points[it + 2] + 0.01f)
                 .color(color[0], color[1], color[2], color[3]).next()
         }
 

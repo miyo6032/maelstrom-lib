@@ -9,18 +9,19 @@ import net.barribob.maelstrom.MaelstromMod
 import net.barribob.maelstrom.general.event.TimedEvent
 import net.barribob.maelstrom.static_utilities.InGameTests
 import net.barribob.maelstrom.static_utilities.format
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
+import net.minecraft.command.CommandRegistryAccess
 import net.minecraft.command.CommandSource
 import net.minecraft.command.suggestion.SuggestionProviders
 import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.text.LiteralText
+import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import java.util.*
 import kotlin.system.measureNanoTime
 
 class TestCommand(inGameTests: InGameTests) : CommandRegistrationCallback {
-    private val notFoundException = DynamicCommandExceptionType { LiteralText("Test name not found") }
+    private val notFoundException = DynamicCommandExceptionType { Text.literal("Test name not found") }
 
     private val tests = mutableMapOf<Identifier, (ServerCommandSource) -> Unit>()
 
@@ -42,7 +43,7 @@ class TestCommand(inGameTests: InGameTests) : CommandRegistrationCallback {
             SuggestionProvider { _, builder ->
                 CommandSource.forEachMatching(
                     tests.keys,
-                    builder.remaining.toLowerCase(Locale.ROOT),
+                    builder.remaining.lowercase(Locale.ROOT),
                     { it },
                     { builder.suggest(it.toString()) })
                 return@SuggestionProvider builder.buildFuture()
@@ -51,9 +52,9 @@ class TestCommand(inGameTests: InGameTests) : CommandRegistrationCallback {
     fun addId(
         name: String,
         callback: (ServerCommandSource) -> Unit
-    ) = tests.put(Identifier(name.toLowerCase(Locale.ROOT)), callback)
+    ) = tests.put(Identifier(name.lowercase(Locale.ROOT)), callback)
 
-    override fun register(dispatcher: CommandDispatcher<ServerCommandSource>, p1: Boolean) {
+    override fun register(dispatcher: CommandDispatcher<ServerCommandSource>, registryAccess: CommandRegistryAccess?, environment: CommandManager.RegistrationEnvironment?) {
         val commandName = "libtest"
         val timeArgumentName = "ticks"
         dispatcher.register(
@@ -78,7 +79,7 @@ class TestCommand(inGameTests: InGameTests) : CommandRegistrationCallback {
             try {
                 time += measureNanoTime { tests[identifier]?.invoke(context.source) }
             } catch (e: Exception) {
-                context.source.sendFeedback(LiteralText(e.message), false)
+                context.source.sendFeedback(Text.literal(e.message), false)
                 e.printStackTrace()
             }
         }
@@ -86,7 +87,7 @@ class TestCommand(inGameTests: InGameTests) : CommandRegistrationCallback {
         MaelstromMod.serverEventScheduler.addEvent(TimedEvent(runTest, 0, ticks))
         MaelstromMod.serverEventScheduler.addEvent(TimedEvent({
             context.source.sendFeedback(
-                LiteralText("Test(s) ran using ${((time / ticks) * 1e-6).format(3)} ms of runtime"),
+                Text.literal("Test(s) ran using ${((time / ticks) * 1e-6).format(3)} ms of runtime"),
                 false
             )
         }, ticks))

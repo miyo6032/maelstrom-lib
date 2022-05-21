@@ -32,9 +32,7 @@ class TestCommand(inGameTests: InGameTests) : CommandRegistrationCallback {
         addId(inGameTests::boxCorners.name, inGameTests::boxCorners)
         addId(inGameTests::willBoxFit.name, inGameTests::willBoxFit)
         addId(inGameTests::raycast.name, inGameTests::raycast)
-        addId(inGameTests::explode.name, inGameTests::explode)
         addId(inGameTests::circleCallback.name, inGameTests::circleCallback)
-        addId(inGameTests::unknownBehaviorWithSchedulersAcrossWorlds.name, inGameTests::unknownBehaviorWithSchedulersAcrossWorlds)
     }
 
     private val suggestions: SuggestionProvider<ServerCommandSource> =

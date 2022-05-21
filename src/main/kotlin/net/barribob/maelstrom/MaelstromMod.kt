@@ -7,7 +7,6 @@ import net.barribob.maelstrom.general.event.EventScheduler
 import net.barribob.maelstrom.general.io.ConsoleLogger
 import net.barribob.maelstrom.general.io.ILogger
 import net.barribob.maelstrom.mixin.ArgumentTypeAccessor
-import net.barribob.maelstrom.mob.AIManager
 import net.barribob.maelstrom.render.RenderMap
 import net.barribob.maelstrom.static_utilities.DebugPointsNetworkHandler
 import net.barribob.maelstrom.static_utilities.InGameTests
@@ -22,26 +21,21 @@ import net.minecraft.util.registry.Registry
 import org.apache.logging.log4j.LogManager
 
 object MaelstromMod {
-    // Todo: refactor this to separate server from client
-    const val MODID = "maelstrom"
-    val DRAW_POINTS_PACKET_ID = Identifier(MODID, "draw_points")
+    internal const val MODID = "maelstrom"
+    internal val DRAW_POINTS_PACKET_ID = Identifier(MODID, "draw_points")
 
     @Deprecated("Causes unknown behavior across worlds")
     @Environment(EnvType.SERVER)
-    val serverEventScheduler = EventScheduler()
-
-    @Environment(EnvType.SERVER)
-    val aiManager = AIManager()
-
-    val LOGGER: ILogger = ConsoleLogger(LogManager.getLogger())
+    internal val serverEventScheduler = EventScheduler()
 
     @Environment(EnvType.CLIENT)
     val renderMap = RenderMap()
 
     @Deprecated("Causes unknown behavior across worlds")
     @Environment(EnvType.CLIENT)
-    val clientEventScheduler = EventScheduler()
+    internal val clientEventScheduler = EventScheduler()
 
+    val LOGGER: ILogger = ConsoleLogger(LogManager.getLogger())
     val debugPoints = DebugPointsNetworkHandler()
     val testCommand = TestCommand(InGameTests(debugPoints))
 
@@ -49,12 +43,13 @@ object MaelstromMod {
 }
 
 fun init() {
-    ServerTickEvents.START_SERVER_TICK.register(ServerTickEvents.StartTick { MaelstromMod.serverEventScheduler.updateEvents() })
-
-    if(isDevelopmentEnvironment) initDev()
+    if(isDevelopmentEnvironment){
+        initDev()
+    }
 }
 
 private fun initDev() {
+    ServerTickEvents.START_SERVER_TICK.register(ServerTickEvents.StartTick { MaelstromMod.serverEventScheduler.updateEvents() })
     CommandRegistrationCallback.EVENT.register(MaelstromMod.testCommand)
     ArgumentTypeAccessor.register(Registry.COMMAND_ARGUMENT_TYPE,
         "${MaelstromMod.MODID}:libtest",

@@ -16,8 +16,8 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer
-import net.minecraft.registry.Registries
 import net.minecraft.util.Identifier
+import net.minecraft.util.registry.Registry
 import org.apache.logging.log4j.LogManager
 
 object MaelstromMod {
@@ -51,7 +51,7 @@ fun init() {
 private fun initDev() {
     ServerTickEvents.START_SERVER_TICK.register(ServerTickEvents.StartTick { MaelstromMod.serverEventScheduler.updateEvents() })
     CommandRegistrationCallback.EVENT.register(MaelstromMod.testCommand)
-    ArgumentTypeAccessor.register(Registries.COMMAND_ARGUMENT_TYPE,
+    ArgumentTypeAccessor.register(Registry.COMMAND_ARGUMENT_TYPE,
         "${MaelstromMod.MODID}:libtest",
         TestArgumentType::class.java,
         ConstantArgumentSerializer.of { _ -> TestArgumentType(MaelstromMod.testCommand) })

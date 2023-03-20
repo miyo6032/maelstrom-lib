@@ -14,7 +14,6 @@ object RenderUtils {
         RenderSystem.enableBlend()
         RenderSystem.lineWidth(2.0f)
         GL11.glPointSize(2.0f)
-        RenderSystem.disableTexture()
         RenderSystem.depthMask(false)
         renderData.matrixStack.translate(-renderData.camera.pos.x, -renderData.camera.pos.y, -renderData.camera.pos.z)
         val tessellate: Tessellator = Tessellator.getInstance()
@@ -33,7 +32,6 @@ object RenderUtils {
         tessellate.draw()
 
         RenderSystem.depthMask(true)
-        RenderSystem.enableTexture()
         RenderSystem.disableBlend()
         renderData.matrixStack.pop()
     }

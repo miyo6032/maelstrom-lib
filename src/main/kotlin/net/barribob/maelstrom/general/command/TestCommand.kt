@@ -77,7 +77,7 @@ class TestCommand(inGameTests: InGameTests) : CommandRegistrationCallback {
             try {
                 time += measureNanoTime { tests[identifier]?.invoke(context.source) }
             } catch (e: Exception) {
-                context.source.sendFeedback(Text.literal(e.message), false)
+                context.source.sendFeedback({Text.literal(e.message)}, false)
                 e.printStackTrace()
             }
         }
@@ -85,7 +85,7 @@ class TestCommand(inGameTests: InGameTests) : CommandRegistrationCallback {
         MaelstromMod.serverEventScheduler.addEvent(TimedEvent(runTest, 0, ticks))
         MaelstromMod.serverEventScheduler.addEvent(TimedEvent({
             context.source.sendFeedback(
-                Text.literal("Test(s) ran using ${((time / ticks) * 1e-6).format(3)} ms of runtime"),
+                {Text.literal("Test(s) ran using ${((time / ticks) * 1e-6).format(3)} ms of runtime")},
                 false
             )
         }, ticks))

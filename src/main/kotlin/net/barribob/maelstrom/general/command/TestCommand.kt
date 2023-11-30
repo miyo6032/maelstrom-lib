@@ -83,14 +83,6 @@ class TestCommand(inGameTests: InGameTests) : CommandRegistrationCallback {
             }
         }
 
-        MaelstromMod.serverEventScheduler.addEvent(TimedEvent(runTest, 0, ticks))
-        MaelstromMod.serverEventScheduler.addEvent(TimedEvent({
-            context.source.sendFeedback(
-                LiteralText("Test(s) ran using ${((time / ticks) * 1e-6).format(3)} ms of runtime"),
-                false
-            )
-        }, ticks))
-
         return 1
     }
 

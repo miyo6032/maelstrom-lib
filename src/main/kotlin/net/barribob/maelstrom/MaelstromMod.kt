@@ -25,10 +25,6 @@ object MaelstromMod {
     const val MODID = "maelstrom"
     val DRAW_POINTS_PACKET_ID = Identifier(MODID, "draw_points")
 
-    @Deprecated("Causes unknown behavior across worlds")
-    @Environment(EnvType.SERVER)
-    val serverEventScheduler = EventScheduler()
-
     @Environment(EnvType.SERVER)
     val aiManager = AIManager()
 
@@ -48,9 +44,9 @@ object MaelstromMod {
 }
 
 fun init() {
-    ServerTickEvents.START_SERVER_TICK.register(ServerTickEvents.StartTick { MaelstromMod.serverEventScheduler.updateEvents() })
-
-    if(isDevelopmentEnvironment) initDev()
+    if(isDevelopmentEnvironment){
+        initDev()
+    }
 }
 
 private fun initDev() {

@@ -24,10 +24,6 @@ object MaelstromMod {
     internal const val MODID = "maelstrom"
     internal val DRAW_POINTS_PACKET_ID = Identifier(MODID, "draw_points")
 
-    @Deprecated("Causes unknown behavior across worlds")
-    @Environment(EnvType.SERVER)
-    internal val serverEventScheduler = EventScheduler()
-
     @Environment(EnvType.CLIENT)
     val renderMap = RenderMap()
 
@@ -49,7 +45,6 @@ fun init() {
 }
 
 private fun initDev() {
-    ServerTickEvents.START_SERVER_TICK.register(ServerTickEvents.StartTick { MaelstromMod.serverEventScheduler.updateEvents() })
     CommandRegistrationCallback.EVENT.register(MaelstromMod.testCommand)
     ArgumentTypeAccessor.register(Registry.COMMAND_ARGUMENT_TYPE,
         "${MaelstromMod.MODID}:libtest",

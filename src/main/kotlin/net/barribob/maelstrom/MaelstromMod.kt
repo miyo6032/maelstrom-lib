@@ -30,11 +30,9 @@ object MaelstromMod {
 
     val LOGGER: ILogger = ConsoleLogger(LogManager.getLogger())
 
-    @Environment(EnvType.CLIENT)
     val renderMap = RenderMap()
 
     @Deprecated("Causes unknown behavior across worlds")
-    @Environment(EnvType.CLIENT)
     val clientEventScheduler = EventScheduler()
 
     val debugPoints = DebugPointsNetworkHandler()

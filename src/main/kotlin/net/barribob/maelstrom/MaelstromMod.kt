@@ -24,11 +24,9 @@ object MaelstromMod {
     internal const val MODID = "maelstrom"
     internal val DRAW_POINTS_PACKET_ID = Identifier(MODID, "draw_points")
 
-    @Environment(EnvType.CLIENT)
     val renderMap = RenderMap()
 
     @Deprecated("Causes unknown behavior across worlds")
-    @Environment(EnvType.CLIENT)
     internal val clientEventScheduler = EventScheduler()
 
     val LOGGER: ILogger = ConsoleLogger(LogManager.getLogger())

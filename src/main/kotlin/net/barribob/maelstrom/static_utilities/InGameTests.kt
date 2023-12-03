@@ -81,17 +81,4 @@ class InGameTests(private val debugPoints: DebugPointsNetworkHandler) {
         val target = pos.add(lookOffset)
         return Pair(pos, target)
     }
-
-    /**
-     * Server event scheduler causes the server to stop if an entity is spawned across worlds
-     * [World.sendEntityStatus], [ServerWorld.spawnParticles], [Entity.setPos], [Entity.playSound], [DebugPointsNetworkHandler.drawDebugPoints]
-     * do not seem to have this effect. In any case, we must avoid using this event schedule to avoid undefined behavior
-     */
-    fun unknownBehaviorWithSchedulersAcrossWorlds(source: ServerCommandSource) {
-        val world = source.world
-        val entity = source.entityOrThrow
-        MaelstromMod.serverEventScheduler.addEvent(TimedEvent({
-            world.spawnEntity(SnowballEntity(world, entity as LivingEntity))
-        }, 100))
-    }
 }

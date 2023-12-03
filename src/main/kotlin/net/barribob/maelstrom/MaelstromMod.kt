@@ -25,7 +25,6 @@ object MaelstromMod {
     const val MODID = "maelstrom"
     val DRAW_POINTS_PACKET_ID = Identifier(MODID, "draw_points")
 
-    @Environment(EnvType.SERVER)
     val aiManager = AIManager()
 
     val LOGGER: ILogger = ConsoleLogger(LogManager.getLogger())
